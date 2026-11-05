@@ -1,0 +1,9 @@
+{
+  "model": "mobilenetv3_large_100",
+  "size": 384,
+  "batch": 32,
+  "gpu_free_gb_before": 22.8,
+  "peak_reserved_gb": 2.64,
+  "images_per_second": 283.0,
+  "last_loss": 0.957
+}

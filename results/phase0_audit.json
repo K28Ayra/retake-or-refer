@@ -1,0 +1,132 @@
+{
+  "label_counts": {
+    "eyeq_train": {
+      "images": 10759,
+      "patients": 7383,
+      "referable": 2058,
+      "quality": {
+        "0": 7157,
+        "1": 1619,
+        "2": 1983
+      }
+    },
+    "eyeq_val": {
+      "images": 1784,
+      "patients": 1231,
+      "referable": 335,
+      "quality": {
+        "0": 1190,
+        "1": 257,
+        "2": 337
+      }
+    },
+    "eyeq_test": {
+      "images": 4000,
+      "patients": 3752,
+      "referable": 859,
+      "quality": {
+        "0": 2085,
+        "1": 1122,
+        "2": 793
+      }
+    },
+    "deepdrid_train": {
+      "images": 1200,
+      "patients": 300,
+      "referable": 520,
+      "overall_quality": {
+        "0": 624,
+        "1": 576
+      }
+    },
+    "deepdrid_val": {
+      "images": 400,
+      "patients": 100,
+      "referable": 180,
+      "overall_quality": {
+        "0": 218,
+        "1": 182
+      }
+    },
+    "deepdrid_test": {
+      "images": 400,
+      "patients": 100,
+      "referable": 164,
+      "overall_quality": {
+        "0": 220,
+        "1": 180
+      }
+    }
+  },
+  "patient_overlap": {
+    "eyeq_train|eyeq_val": 0,
+    "eyeq_train|eyeq_test": 0,
+    "eyeq_val|eyeq_test": 0,
+    "deepdrid_train|deepdrid_val": 0,
+    "deepdrid_train|deepdrid_test": 0,
+    "deepdrid_val|deepdrid_test": 0
+  },
+  "images": {
+    "eyeq_train": {
+      "listed": 10759,
+      "readable": 10759,
+      "duplicates_by_hash": 0,
+      "median_kb": 258.9,
+      "common_sizes": {
+        "512x512": 1469,
+        "512x511": 861,
+        "512x510": 769
+      }
+    },
+    "eyeq_val": {
+      "listed": 1784,
+      "readable": 1784,
+      "duplicates_by_hash": 0,
+      "median_kb": 1085.8,
+      "common_sizes": {
+        "3888x2592": 539,
+        "2592x1944": 257,
+        "4752x3168": 208
+      }
+    },
+    "deepdrid_train": {
+      "listed": 1200,
+      "readable": 1200,
+      "duplicates_by_hash": 0,
+      "median_kb": 533.8,
+      "common_sizes": {
+        "1736x1824": 744,
+        "1976x1984": 420,
+        "1734x1821": 12
+      }
+    },
+    "deepdrid_val": {
+      "listed": 400,
+      "readable": 400,
+      "duplicates_by_hash": 0,
+      "median_kb": 538.8,
+      "common_sizes": {
+        "1736x1824": 288,
+        "1976x1984": 108,
+        "1734x1821": 4
+      }
+    },
+    "deepdrid_test": {
+      "listed": 400,
+      "readable": 400,
+      "duplicates_by_hash": 0,
+      "median_kb": 523.0,
+      "common_sizes": {
+        "1736x1824": 262,
+        "1976x1984": 132,
+        "1592x1728": 4
+      }
+    }
+  },
+  "split_sha256": {
+    "deepdrid.csv": "1a0d914ebf97b537f9f29c5f2d47edfcdaeea68019379e33afa54103e8c2ef51",
+    "deepdrid_test.csv": "137e204ce446feb00484089c0508346ddcc46e1fd1ab30cba6c4359899605fe6",
+    "eyeq.csv": "1207a9d826d384773cdcd9295037c6b2a809d00f1a2d5fec00c88c57f12b0ea1",
+    "eyeq_test.csv": "7cb1e3d2f1d93a56ded62edc26385959a20fb202a4d94cdf6f2371f27d13ac45"
+  }
+}
