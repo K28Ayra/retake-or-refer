@@ -4,11 +4,13 @@
     python scripts/00_download.py deepdrid
     python scripts/00_download.py eyepacs_train
     python scripts/00_download.py eyepacs_test
+    python scripts/00_download.py imagenette
 """
 import argparse
 import os
 import shutil
 import sys
+import tarfile
 import time
 import urllib.request
 import zipfile
@@ -86,6 +88,18 @@ def download_deepdrid(workers=8):
             if done % 100 == 0:
                 print(done, f"{fetched / 1e6:.0f} MB this run", flush=True)
     print("finished", flush=True)
+
+
+def download_imagenette():
+    """Ordinary photos, only used to test the not-a-fundus check."""
+    folder = RAW / "imagenette"
+    folder.mkdir(parents=True, exist_ok=True)
+    url = "https://s3.amazonaws.com/fast-ai-imageclas/imagenette2-160.tgz"
+    archive = folder / "imagenette2-160.tgz"
+    urllib.request.urlretrieve(url, archive)
+    with tarfile.open(archive) as tar:
+        tar.extractall(folder, filter="data")
+    archive.unlink()
 
 
 def read_token():
@@ -188,7 +202,7 @@ def download_eyepacs(split):
 
 def main():
     parser = argparse.ArgumentParser()
-    choices = ["eyeq_labels", "deepdrid", "eyepacs_train", "eyepacs_test"]
+    choices = ["eyeq_labels", "deepdrid", "eyepacs_train", "eyepacs_test", "imagenette"]
     parser.add_argument("what", choices=choices)
     args = parser.parse_args()
 
@@ -196,6 +210,8 @@ def main():
         download_eyeq_labels()
     elif args.what == "deepdrid":
         download_deepdrid()
+    elif args.what == "imagenette":
+        download_imagenette()
     elif args.what == "eyepacs_train":
         download_eyepacs("train")
     else:
