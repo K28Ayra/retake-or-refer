@@ -1,0 +1,23 @@
+task,attempt,accuracy,macro_f1,balanced_accuracy,auroc
+eyeq_quality,"logistic, sharpness only",0.8682735426008968,0.7593213758170935,,
+eyeq_quality,"logistic, all quality",0.9035874439461884,0.8286551855496059,,
+eyeq_quality,"logistic balanced, all quality",0.882847533632287,0.8188311220210008,,
+eyeq_quality,"forest balanced, all quality",0.9170403587443946,0.8544776204699661,,
+eyeq_quality,"boosting, all quality",0.9170403587443946,0.8526649374045618,,
+eyeq_quality,"boosting balanced, all quality",0.9181614349775785,0.8579050013304782,,
+eyeq_quality,"boosting, quality + lesion",0.9164798206278026,0.8525488157947115,,
+eyeq_quality,"boosting balanced, quality + lesion",0.9164798206278026,0.856261101030515,,
+eyeq_quality,"boosting balanced deeper, quality + lesion",0.9237668161434978,0.8669466590446436,,
+eyeq_quality,"boosting balanced smaller, quality + lesion",0.922085201793722,0.8650221212898662,,
+deepdrid_quality,"logistic, all quality",0.755,,0.7529992942836979,0.8237473535638673
+deepdrid_quality,"forest, all quality",0.7175,,0.7167809254965218,0.7995009577578385
+deepdrid_quality,"boosting small, all quality",0.7225,,0.7209144066942232,0.7755822159491883
+eyeq_referable,"logistic, lesion",,,,0.5845987454034177
+eyeq_referable,"boosting, lesion",,,,0.5936312227681468
+eyeq_referable,"boosting, quality + lesion",,,,0.6820328996837757
+eyeq_good_usable_referable,"logistic, lesion",,,,0.5831646423751686
+eyeq_good_usable_referable,"boosting, lesion",,,,0.5733029689608637
+eyeq_good_usable_referable,"boosting, quality + lesion",,,,0.6962348178137653
+deepdrid_referable,"logistic, lesion",,,,0.6369949494949496
+deepdrid_referable,"boosting, lesion",,,,0.6273484848484849
+deepdrid_referable,"boosting, quality + lesion",,,,0.8124999999999999

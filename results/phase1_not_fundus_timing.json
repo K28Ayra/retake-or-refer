@@ -1,0 +1,18 @@
+{
+  "tuned": {
+    "red_lead": 1.0,
+    "blue_ratio": 0.85,
+    "corner": 15,
+    "caught": 0.984,
+    "lost": 0.008
+  },
+  "held_out_photos_rejected": 0.996,
+  "plain_frames_rejected": 1.0,
+  "real_good_usable_and_deepdrid_lost": 0.002165674066053059,
+  "real_eyeq_reject_flagged": 0.12759643916913946,
+  "timing": {
+    "quality_median_ms": 22.5,
+    "quality_p95_ms": 30.0,
+    "lesion_median_ms": 16.4
+  }
+}

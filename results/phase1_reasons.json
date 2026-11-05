@@ -1,0 +1,82 @@
+{
+  "attempts": [
+    {
+      "attempt": "three thresholds, blur from laplacian",
+      "tuning_macro_f1": 0.7513,
+      "val_macro_f1": 0.7384,
+      "thresholds": [
+        2.912,
+        0.2099,
+        0.1743
+      ],
+      "val_by_strength": {
+        "1": 0.5812,
+        "2": 0.7337,
+        "3": 0.8019
+      }
+    },
+    {
+      "attempt": "three thresholds, blur from focus",
+      "tuning_macro_f1": 0.7511,
+      "val_macro_f1": 0.7376,
+      "thresholds": [
+        0.0128,
+        0.2099,
+        0.1743
+      ],
+      "val_by_strength": {
+        "1": 0.5817,
+        "2": 0.7325,
+        "3": 0.7999
+      }
+    },
+    {
+      "attempt": "three thresholds, blur from high_freq",
+      "tuning_macro_f1": 0.5809,
+      "val_macro_f1": 0.5727,
+      "thresholds": [
+        0.0435,
+        0.2099,
+        0.1743
+      ],
+      "val_by_strength": {
+        "1": 0.4046,
+        "2": 0.5798,
+        "3": 0.6619
+      }
+    },
+    {
+      "attempt": "decision tree, depth 3",
+      "val_macro_f1": 0.8289,
+      "val_by_strength": {
+        "1": 0.7066,
+        "2": 0.8343,
+        "3": 0.8704
+      }
+    },
+    {
+      "attempt": "decision tree, depth 4",
+      "val_macro_f1": 0.8241,
+      "val_by_strength": {
+        "1": 0.7079,
+        "2": 0.801,
+        "3": 0.8663
+      }
+    },
+    {
+      "attempt": "decision tree, depth 6",
+      "val_macro_f1": 0.8439,
+      "val_by_strength": {
+        "1": 0.7397,
+        "2": 0.8273,
+        "3": 0.8693
+      }
+    }
+  ],
+  "best": "decision tree, depth 6",
+  "best_val_macro_f1": 0.8439,
+  "best_ci": [
+    0.8310931371063051,
+    0.8558113246193048
+  ]
+}

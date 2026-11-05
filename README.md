@@ -2,7 +2,7 @@
 
 Takes a colour retinal photo and tells a screening worker what to do next: refer the patient, retake the photo, or clear them. The goal is to catch a bad photo while the patient is still in the room, on a phone, with photos small enough to send over a weak network.
 
-Right now only the data side works. The models come next. This is a research project and not a medical device.
+Right now the data side and a classical baseline work. The neural models come next. This is a research project and not a medical device.
 
 ## Setup
 
@@ -24,6 +24,7 @@ You need a Kaggle account for EyePACS. Accept the rules on the [competition page
 python scripts/00_download.py eyeq_labels
 python scripts/00_download.py deepdrid
 python scripts/00_download.py eyepacs_train
+python scripts/00_download.py imagenette
 python scripts/01_make_splits.py
 python scripts/02_prepare_eyepacs.py train
 python scripts/03_audit.py
@@ -44,6 +45,7 @@ python scripts/04_smoke_train.py --size 384 --batch 32
 | [EyeQ](https://github.com/HzFu/EyeQ) (on EyePACS photos) | train, val, test | 12,543 train, 4,000 of 16,249 test | good / usable / reject |
 | [DeepDRiD](https://github.com/deepdrdoc/DeepDRiD) regular | train, val, test | 1,200 / 400 / 400 | binary |
 | DeepDRiD ultra-widefield | outside camera check | 256 | none |
+| Imagenette | testing the not-a-fundus check | 1,000 sampled | none |
 
 Referable means ICDR grade 2 or higher. Splits are by patient.
 
@@ -62,3 +64,31 @@ Built the splits and checked them before doing anything else. No patient appears
 Two things in the data changed the plan. DeepDRiD quality is binary, so the 0.65 to 0.70 from its challenge can't be compared with a three-class score. I'll compare against the EyeQ paper (0.8914 accuracy for ResNet18) instead. And no dataset labels why a photo is bad, so the blur / uneven light / low contrast output has to be trained on damage I add to photos myself.
 
 A small training run on the EyeQ cache used 2.64 GB of GPU memory at 384 px, batch 32, at 283 images per second. More in [docs/phase0.md](docs/phase0.md).
+
+## Phase 1: classical baseline
+
+Hand-made features (sharpness, light evenness, contrast, colour, lesion-like spots) with gradient boosting.
+
+```bash
+python scripts/10_extract_features.py
+python scripts/11_classical_quality.py
+python scripts/12_check_leakage.py
+python scripts/13_reason_rules.py
+python scripts/14_not_fundus_and_timing.py
+```
+
+The whole thing takes a few minutes on CPU. Validation results:
+
+| Task | Result |
+|---|---|
+| EyeQ quality, three classes | 0.924 accuracy, 0.867 macro-F1 |
+| Same, reweighted to the EyeQ test class mix | about 0.882 accuracy, 0.851 macro-F1 |
+| DeepDRiD quality, binary | 0.755 accuracy |
+| Fault reason on added faults | 0.738 macro-F1 with thresholds, 0.844 with a small tree |
+| Not-a-fundus | rejects 99.6% of ordinary photos, loses 0.2% of real ones |
+| Referable AUROC on EyeQ Good + Usable | 0.696 |
+| Feature time | 22.5 ms at 512 px on one thread |
+
+Don't read that 0.924 as beating the published deep models. EyeQ validation has half the share of Usable photos that test has, and quality follows the camera: 17% of photos are Good at one photo size and 96% at another.
+
+DeepDRiD has it worse. 74% of the 1976x1984 photos are referable and 29% of the 1736x1824 ones, so a model can score well by spotting the camera. From here on I report DeepDRiD disease scores per photo size. Details and what I tried are in [docs/phase1.md](docs/phase1.md).

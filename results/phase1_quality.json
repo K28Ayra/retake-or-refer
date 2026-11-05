@@ -1,0 +1,63 @@
+{
+  "eyeq_quality": {
+    "best": "boosting balanced deeper, quality + lesion",
+    "accuracy": 0.9237668161434978,
+    "accuracy_ci": [
+      0.9103587857772061,
+      0.9363411796747335
+    ],
+    "macro_f1": 0.8669466590446436,
+    "macro_f1_ci": [
+      0.8450919960199526,
+      0.8856022536874636
+    ],
+    "confusion_good_usable_reject": [
+      [
+        1162,
+        28,
+        0
+      ],
+      [
+        14,
+        210,
+        33
+      ],
+      [
+        9,
+        52,
+        276
+      ]
+    ]
+  },
+  "deepdrid_quality": {
+    "task": "deepdrid_quality",
+    "attempt": "logistic, all quality",
+    "accuracy": 0.755,
+    "balanced_accuracy": 0.7529992942836979,
+    "auroc": 0.8237473535638673
+  },
+  "eyeq_referable_all": {
+    "attempt": "boosting, quality + lesion",
+    "auroc": 0.6820328996837757,
+    "auroc_ci": [
+      0.6468553183809835,
+      0.7164369127409234
+    ]
+  },
+  "eyeq_referable_good_usable": {
+    "attempt": "boosting, quality + lesion",
+    "auroc": 0.6962348178137653,
+    "auroc_ci": [
+      0.6586435305522915,
+      0.7328339612406117
+    ]
+  },
+  "deepdrid_referable": {
+    "attempt": "boosting, quality + lesion",
+    "auroc": 0.8124999999999999,
+    "auroc_ci": [
+      0.7378573436568957,
+      0.8816261372985809
+    ]
+  }
+}
