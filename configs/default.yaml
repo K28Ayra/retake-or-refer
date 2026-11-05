@@ -1,0 +1,17 @@
+# false: read photos from a folder or csv. true: read from a camera.
+realtime: false
+
+camera_source: 0
+
+seed: 42
+
+paths:
+  data: data
+  outputs: outputs
+  results: results
+
+splits:
+  val_fraction: 0.15
+  eyeq_test_subset: 4000
+
+referable_grade: 2
