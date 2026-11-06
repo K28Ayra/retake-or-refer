@@ -1,0 +1,50 @@
+{
+  "run": "disease_mobilenetv3_small_100_384_s0_withreject",
+  "grade_shares": {
+    "deepdrid_val": {
+      "0": 0.435,
+      "1": 0.115,
+      "2": 0.23,
+      "3": 0.17,
+      "4": 0.05
+    },
+    "eyeq_val_readable": {
+      "0": 0.739,
+      "1": 0.091,
+      "2": 0.144,
+      "3": 0.019,
+      "4": 0.007
+    }
+  },
+  "referable_share": {
+    "deepdrid_val": 0.45,
+    "eyeq_val_readable": 0.171
+  },
+  "auroc": {
+    "deepdrid": 0.9657,
+    "eyeq": 0.9154
+  },
+  "auroc_each_grade_against_healthy": {
+    "deepdrid": {
+      "2": 0.948,
+      "3": 0.9875,
+      "4": 0.9732
+    },
+    "eyeq": {
+      "2": 0.9011,
+      "3": 0.9929,
+      "4": 0.9959
+    }
+  },
+  "auroc_with_grades_swapped": {
+    "eyeq_at_deepdrid_mix": 0.9408,
+    "deepdrid_at_eyeq_mix": 0.9578
+  },
+  "near_match_in_train": {
+    "similarity_above": 0.98,
+    "photos": 131,
+    "share_same_label": 0.71,
+    "auroc_without_them": 0.9555,
+    "photos_left": 269
+  }
+}

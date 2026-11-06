@@ -2,7 +2,7 @@
 
 Takes a colour retinal photo and tells a screening worker what to do next: refer the patient, retake the photo, or clear them. The goal is to catch a bad photo while the patient is still in the room, on a phone, with photos small enough to send over a weak network.
 
-Right now the data side and a classical baseline work. The neural models come next. This is a research project and not a medical device.
+Right now you can run the data pipeline, a classical baseline and two separate small CNNs, one for quality and one for disease. The joint model comes next, and nothing runs on a phone yet. This is a research project and not a medical device.
 
 ## Setup
 
@@ -92,3 +92,33 @@ The whole thing takes a few minutes on CPU. Validation results:
 Don't read that 0.924 as beating the published deep models. EyeQ validation has half the share of Usable photos that test has, and quality follows the camera: 17% of photos are Good at one photo size and 96% at another.
 
 DeepDRiD has it worse. 74% of the 1976x1984 photos are referable and 29% of the 1736x1824 ones, so a model can score well by spotting the camera. From here on I report DeepDRiD disease scores per photo size. Details and what I tried are in [docs/phase1.md](docs/phase1.md).
+
+## Phase 2: single-task CNNs
+
+One network for quality, one for disease, and a look at how small they can get.
+
+```bash
+python scripts/20_make_deepdrid_cache.py
+python scripts/22_run_phase2.py everything
+python scripts/22_run_phase2.py final
+python scripts/23_compare_phase2.py
+python scripts/25_cpu_time.py
+```
+
+That's 42 trainings and about 5 hours on one GPU. A run is 5 to 12 minutes, and finished runs get skipped if you restart. To train just one, use `scripts/21_train_single.py`.
+
+MobileNetV3 small at 384 px won, because nothing bigger did better. It's 6.1 MB and 12.9 ms per photo on one server CPU thread, which only tells you how the models rank. These are validation means over three seeds:
+
+| Task | Classical | CNN |
+|---|---|---|
+| EyeQ quality accuracy | 0.924 | 0.943 |
+| EyeQ quality macro-F1 | 0.867 | 0.901 |
+| Usable recall | 0.735 | 0.851 |
+| Referable AUROC on EyeQ Good + Usable | 0.696 | 0.907 |
+| DeepDRiD disease AUROC | 0.81 | 0.966 |
+
+I missed the stretch goal of 0.92 AUROC. The best run got 0.916, and going up to 448 px added 0.001.
+
+My early stopping broke the first batch. It stopped runs while the learning rate was still high and scores were jumping around, so 18 of 30 quit too soon and the size comparison was meaningless. Small at 384 px went from 0.868 to 0.901 once every run got all 20 epochs. Putting EyeQ's Reject photos into disease training also helped, even though I'd left them out on purpose.
+
+Don't take the DeepDRiD 0.966 at face value. A model that never saw DeepDRiD still gets 0.939, because that set has far more severe disease than EyeQ (22% of photos against 2.6%) and is easier for reasons I can't fully explain. Quality scores are also flattered by picking the best epoch on validation. The rest is in [docs/phase2.md](docs/phase2.md).

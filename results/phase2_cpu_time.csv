@@ -1,0 +1,9 @@
+model,size,median_ms,p95_ms
+mobilenetv3_small_100,224,5.7,5.7
+mobilenetv3_small_100,320,9.9,10.5
+mobilenetv3_small_100,384,12.9,13.9
+mobilenetv3_small_100,448,17.5,17.8
+mobilenetv3_large_100,320,26.8,27.1
+mobilenetv3_large_100,384,37.0,37.7
+efficientnet_lite0,320,39.5,39.8
+resnet18,320,85.8,86.5
