@@ -2,7 +2,7 @@
 
 Takes a colour retinal photo and tells a screening worker what to do next: refer the patient, retake the photo, or clear them. The goal is to catch a bad photo while the patient is still in the room, on a phone, with photos small enough to send over a weak network.
 
-Right now you can run the data pipeline, a classical baseline, and small CNNs, including one joint model that handles quality, disease and fault reason. Nothing runs on a phone yet. This is a research project and not a medical device.
+Right now you can run the data pipeline, a classical baseline, and small CNNs, including one joint model that handles quality, disease and fault reason, plus simple photo fixes for display. Nothing runs on a phone yet. This is a research project and not a medical device.
 
 ## Setup
 
@@ -151,3 +151,31 @@ Building this turned up a bug from Phase 2. With persistent data loader workers,
 I also dropped the DeepDRiD quality output. It scored only 0.80 AUROC, lower than the classical model, and pulled both main scores down past my margin.
 
 The 0.98 on reasons is on my own simulated damage and doesn't say much about real photos. On real EyeQ Reject photos the model names no fault about half the time, and that's the biggest open problem so far. No dataset labels why a real photo is bad, so I can't score it. More in [docs/phase3.md](docs/phase3.md).
+
+## Phase 4: enhancement
+
+The reason output picks one fix: unsharp mask for blur, tilt correction for uneven light, contrast stretch for low contrast, nothing if there's no fault. I compared that with always applying CLAHE, flat-field, Graham subtraction, or a tiny U-Net.
+
+```bash
+python scripts/40_tune_enhance.py
+python scripts/43_train_unet.py --deep
+python scripts/41_eval_enhance.py
+python scripts/42_eval_enhance_model.py
+python scripts/44_make_figures.py
+```
+
+About 20 minutes in all, once Phase 3 is done. These are validation numbers:
+
+| Fix | SSIM on added faults | SSIM on Good photos | Model AUROC on real photos | Quality macro-F1 on real photos |
+|---|---|---|---|---|
+| Nothing | 0.899 | 1.000 | 0.914 | 0.909 |
+| Always CLAHE | 0.915 | 0.945 | 0.869 | 0.857 |
+| Graham subtraction | 0.761 | 0.606 | 0.645 | 0.598 |
+| Tiny U-Net | 0.913 | 0.995 | 0.911 | 0.887 |
+| Routed | 0.947 | 0.9998 | 0.911 | 0.879 |
+
+Routed wins on the damage I added, at 9 to 23 ms per photo, and leaves good photos alone. But I wrote the fixes for those same faults, and no fix helped the model on real photos. So the model always reads the original, and the fixed photo is only for a person to look at.
+
+Don't grade quality on a fixed photo. Brightening a bad one fools the grader, and macro-F1 drops from 0.909 to 0.879. Blur can't really be fixed either, since SSIM only goes from 0.869 to 0.879.
+
+Some real dark photos came out with dark blobs or false colours that a reader could mistake for disease. Any enhanced photo needs to sit beside the original. They also show a fault I never simulated, which is that some photos are simply too dark. More in [docs/phase4.md](docs/phase4.md).

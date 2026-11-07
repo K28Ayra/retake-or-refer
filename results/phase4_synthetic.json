@@ -1,0 +1,343 @@
+{
+  "settings": {
+    "clahe_clip": 1.0,
+    "light_fix": "tilt",
+    "flat_sigma": 80,
+    "unsharp_sigma": 2.0,
+    "unsharp_amount": 2.0,
+    "contrast_fix": "stretch",
+    "target_std": 24.57,
+    "unet_path": "outputs/phase4/unet_deep.pt"
+  },
+  "synthetic": {
+    "none": {
+      "ssim": 0.8992,
+      "psnr": 24.54,
+      "ssim_mildest": 0.9486,
+      "ssim_worst": 0.8502
+    },
+    "clahe": {
+      "ssim": 0.9146,
+      "psnr": 23.14,
+      "ssim_mildest": 0.9495,
+      "ssim_worst": 0.8781
+    },
+    "graham": {
+      "ssim": 0.7614,
+      "psnr": 12.18,
+      "ssim_mildest": 0.729,
+      "ssim_worst": 0.7852
+    },
+    "flat_field": {
+      "ssim": 0.9124,
+      "psnr": 21.57,
+      "ssim_mildest": 0.9436,
+      "ssim_worst": 0.8831
+    },
+    "routed": {
+      "ssim": 0.9465,
+      "psnr": 30.32,
+      "ssim_mildest": 0.9675,
+      "ssim_worst": 0.9291
+    },
+    "routed_flat": {
+      "ssim": 0.9444,
+      "psnr": 29.68,
+      "ssim_mildest": 0.9673,
+      "ssim_worst": 0.9241
+    },
+    "routed_oracle": {
+      "ssim": 0.9472,
+      "psnr": 30.49,
+      "ssim_mildest": 0.9692,
+      "ssim_worst": 0.9291
+    },
+    "unet": {
+      "ssim": 0.9131,
+      "psnr": 25.59,
+      "ssim_mildest": 0.9474,
+      "ssim_worst": 0.8828
+    }
+  },
+  "by_fault": {
+    "none": {
+      "blur": {
+        "ssim": 0.8687,
+        "psnr": 31.57
+      },
+      "uneven_light": {
+        "ssim": 0.8953,
+        "psnr": 17.54
+      },
+      "low_contrast": {
+        "ssim": 0.9309,
+        "psnr": 25.15
+      }
+    },
+    "clahe": {
+      "blur": {
+        "ssim": 0.8563,
+        "psnr": 25.39
+      },
+      "uneven_light": {
+        "ssim": 0.9268,
+        "psnr": 19.66
+      },
+      "low_contrast": {
+        "ssim": 0.9556,
+        "psnr": 24.57
+      }
+    },
+    "graham": {
+      "blur": {
+        "ssim": 0.7513,
+        "psnr": 12.49
+      },
+      "uneven_light": {
+        "ssim": 0.7286,
+        "psnr": 12.31
+      },
+      "low_contrast": {
+        "ssim": 0.8035,
+        "psnr": 11.77
+      }
+    },
+    "flat_field": {
+      "blur": {
+        "ssim": 0.8434,
+        "psnr": 20.68
+      },
+      "uneven_light": {
+        "ssim": 0.9667,
+        "psnr": 21.99
+      },
+      "low_contrast": {
+        "ssim": 0.921,
+        "psnr": 21.97
+      }
+    },
+    "routed": {
+      "blur": {
+        "ssim": 0.8792,
+        "psnr": 32.72
+      },
+      "uneven_light": {
+        "ssim": 0.9713,
+        "psnr": 23.53
+      },
+      "low_contrast": {
+        "ssim": 0.9831,
+        "psnr": 34.94
+      }
+    },
+    "routed_flat": {
+      "blur": {
+        "ssim": 0.8792,
+        "psnr": 32.72
+      },
+      "uneven_light": {
+        "ssim": 0.965,
+        "psnr": 21.67
+      },
+      "low_contrast": {
+        "ssim": 0.9831,
+        "psnr": 34.94
+      }
+    },
+    "routed_oracle": {
+      "blur": {
+        "ssim": 0.8792,
+        "psnr": 32.72
+      },
+      "uneven_light": {
+        "ssim": 0.9728,
+        "psnr": 23.94
+      },
+      "low_contrast": {
+        "ssim": 0.9834,
+        "psnr": 35.04
+      }
+    },
+    "unet": {
+      "blur": {
+        "ssim": 0.865,
+        "psnr": 30.04
+      },
+      "uneven_light": {
+        "ssim": 0.9394,
+        "psnr": 20.95
+      },
+      "low_contrast": {
+        "ssim": 0.9304,
+        "psnr": 26.18
+      }
+    }
+  },
+  "gap_over_clahe": {
+    "graham": {
+      "ssim": {
+        "gap": -0.1533,
+        "low": -0.1577,
+        "high": -0.1486
+      },
+      "psnr": {
+        "gap": -10.9549,
+        "low": -11.1718,
+        "high": -10.7184
+      }
+    },
+    "flat_field": {
+      "ssim": {
+        "gap": -0.0022,
+        "low": -0.0038,
+        "high": -0.0007
+      },
+      "psnr": {
+        "gap": -1.5631,
+        "low": -1.7345,
+        "high": -1.4076
+      }
+    },
+    "routed": {
+      "ssim": {
+        "gap": 0.0319,
+        "low": 0.0308,
+        "high": 0.0329
+      },
+      "psnr": {
+        "gap": 7.1802,
+        "low": 6.9577,
+        "high": 7.3839
+      }
+    },
+    "routed_flat": {
+      "ssim": {
+        "gap": 0.0297,
+        "low": 0.0288,
+        "high": 0.0306
+      },
+      "psnr": {
+        "gap": 6.5396,
+        "low": 6.3162,
+        "high": 6.7413
+      }
+    },
+    "routed_oracle": {
+      "ssim": {
+        "gap": 0.0325,
+        "low": 0.0315,
+        "high": 0.0336
+      },
+      "psnr": {
+        "gap": 7.3567,
+        "low": 7.1443,
+        "high": 7.5487
+      }
+    },
+    "unet": {
+      "ssim": {
+        "gap": -0.0016,
+        "low": -0.0026,
+        "high": -0.0005
+      },
+      "psnr": {
+        "gap": 2.4518,
+        "low": 2.3072,
+        "high": 2.5957
+      }
+    }
+  },
+  "good_photos": {
+    "share_changed_by_routed": 0.0042,
+    "none": {
+      "ssim": 1.0,
+      "share_below_098": 0.0
+    },
+    "clahe": {
+      "ssim": 0.945,
+      "share_below_098": 1.0
+    },
+    "graham": {
+      "ssim": 0.6062,
+      "share_below_098": 1.0
+    },
+    "flat_field": {
+      "ssim": 0.9626,
+      "share_below_098": 0.7193
+    },
+    "routed": {
+      "ssim": 0.9998,
+      "share_below_098": 0.0034
+    },
+    "routed_flat": {
+      "ssim": 0.9998,
+      "share_below_098": 0.0034
+    },
+    "routed_oracle": {
+      "ssim": 1.0,
+      "share_below_098": 0.0
+    },
+    "unet": {
+      "ssim": 0.9949,
+      "share_below_098": 0.0655
+    }
+  },
+  "cpu_ms_one_thread_512": {
+    "none": {
+      "median_ms": 0.1,
+      "p95_ms": 0.2
+    },
+    "clahe": {
+      "median_ms": 11.6,
+      "p95_ms": 12.4
+    },
+    "graham": {
+      "median_ms": 20.6,
+      "p95_ms": 21.7
+    },
+    "flat_field": {
+      "median_ms": 11.3,
+      "p95_ms": 12.1
+    },
+    "routed blur": {
+      "median_ms": 8.9,
+      "p95_ms": 9.5
+    },
+    "routed uneven_light": {
+      "median_ms": 14.0,
+      "p95_ms": 16.4
+    },
+    "routed low_contrast": {
+      "median_ms": 22.8,
+      "p95_ms": 23.7
+    },
+    "routed_flat blur": {
+      "median_ms": 9.1,
+      "p95_ms": 9.6
+    },
+    "routed_flat uneven_light": {
+      "median_ms": 11.2,
+      "p95_ms": 12.0
+    },
+    "routed_flat low_contrast": {
+      "median_ms": 22.8,
+      "p95_ms": 23.7
+    },
+    "routed_oracle blur": {
+      "median_ms": 9.1,
+      "p95_ms": 9.6
+    },
+    "routed_oracle uneven_light": {
+      "median_ms": 13.9,
+      "p95_ms": 15.2
+    },
+    "routed_oracle low_contrast": {
+      "median_ms": 23.0,
+      "p95_ms": 23.7
+    },
+    "unet": {
+      "median_ms": 45.4,
+      "p95_ms": 55.1
+    }
+  }
+}

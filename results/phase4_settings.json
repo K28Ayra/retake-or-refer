@@ -1,0 +1,9 @@
+{
+  "clahe_clip": 1.0,
+  "light_fix": "tilt",
+  "flat_sigma": 80,
+  "unsharp_sigma": 2.0,
+  "unsharp_amount": 2.0,
+  "contrast_fix": "stretch",
+  "target_std": 24.57
+}

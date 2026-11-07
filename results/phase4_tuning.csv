@@ -1,0 +1,34 @@
+fault,fix,ssim
+blur,clahe 1.0,0.8581
+blur,clahe 2.0,0.8362
+blur,clahe 3.0,0.8102
+blur,clahe 4.0,0.7825
+blur,nothing,0.8714
+blur,unsharp 2.0 0.5,0.8755
+blur,unsharp 2.0 1.0,0.8789
+blur,unsharp 2.0 2.0,0.8819
+blur,unsharp 2.0 3.0,0.8808
+blur,unsharp 4.0 0.5,0.8781
+blur,unsharp 4.0 1.0,0.8815
+blur,unsharp 4.0 2.0,0.878
+blur,unsharp 4.0 3.0,0.8667
+blur,unsharp 7.0 0.5,0.8782
+blur,unsharp 7.0 1.0,0.879
+blur,unsharp 7.0 2.0,0.8661
+blur,unsharp 7.0 3.0,0.8437
+low_contrast,clahe 1.0,0.9563
+low_contrast,clahe 2.0,0.9499
+low_contrast,clahe 3.0,0.9233
+low_contrast,clahe 4.0,0.8867
+low_contrast,nothing,0.9326
+low_contrast,stretch,0.9839
+uneven_light,clahe 1.0,0.9276
+uneven_light,clahe 2.0,0.8929
+uneven_light,clahe 3.0,0.8364
+uneven_light,clahe 4.0,0.7756
+uneven_light,flat 120,0.9577
+uneven_light,flat 20,0.9526
+uneven_light,flat 40,0.9613
+uneven_light,flat 80,0.966
+uneven_light,nothing,0.8955
+uneven_light,tilt,0.9723
