@@ -1,7 +1,7 @@
 import numpy as np
 
 from retake.degrade import add_blur, add_low_contrast, add_uneven_light
-from retake.metrics import accuracy, patient_bootstrap
+from retake.metrics import accuracy, macro_f1, paired_gap, patient_bootstrap
 from retake.quality_features import (
     feature_names,
     fundus_mask,
@@ -75,3 +75,12 @@ def test_bootstrap_interval_contains_score():
     patients = np.arange(100)
     low, high = patient_bootstrap(accuracy, labels, predicted, patients, rounds=100)
     assert low <= accuracy(labels, predicted) <= high
+
+
+def test_paired_gap_is_zero_for_the_same_answers():
+    labels = [0, 1, 0, 1, 0, 1]
+    answers = [0, 1, 1, 1, 0, 0]
+    patients = ["a", "a", "b", "b", "c", "c"]
+    low, high = paired_gap(macro_f1, labels, answers, answers, patients, rounds=20)
+    assert low == 0
+    assert high == 0

@@ -7,12 +7,11 @@ import pandas as pd
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.metrics import confusion_matrix, roc_auc_score
 
-from retake.metrics import accuracy, macro_f1, patient_bootstrap
+from retake.metrics import accuracy, macro_f1, paired_gap, patient_bootstrap
 from retake.quality_features import feature_names
 
 LESIONS = ["dark_spots", "dark_area", "bright_spots", "bright_area", "dark_blob"]
 TEST_COUNTS = np.array([8471, 4558, 3220], dtype=float)
-ROUNDS = 1000
 
 
 def classical_predictions(columns):
@@ -28,23 +27,6 @@ def classical_predictions(columns):
     )
     model.fit(train[columns], train["quality"])
     return val["image"].to_numpy(), model.predict(val[columns])
-
-
-def paired_gap(labels, first, second, patients, metric, seed=0):
-    """95% interval for first minus second, resampling whole patients."""
-    rows_by_patient = {}
-    for row, patient in enumerate(patients):
-        rows_by_patient.setdefault(patient, []).append(row)
-    groups = list(rows_by_patient.values())
-
-    rng = np.random.default_rng(seed)
-    gaps = []
-    for _ in range(ROUNDS):
-        picks = rng.integers(0, len(groups), len(groups))
-        rows = np.concatenate([groups[pick] for pick in picks])
-        gaps.append(metric(labels[rows], first[rows]) - metric(labels[rows], second[rows]))
-    low, high = np.percentile(gaps, [2.5, 97.5])
-    return round(float(low), 4), round(float(high), 4)
 
 
 def at_test_mix(labels, predicted):
@@ -122,7 +104,7 @@ def main():
         results["quality"][run["run"]] = {
             "macro_f1": run["macro_f1"],
             "macro_f1_ci": patient_bootstrap(macro_f1, labels, predicted, patients),
-            "minus_classical_ci": paired_gap(labels, predicted, classical_best, patients, macro_f1),
+            "minus_classical_ci": paired_gap(macro_f1, labels, predicted, classical_best, patients),
             "at_test_mix": at_test_mix(labels, predicted),
             "by_photo_size": quality_by_size(labels, predicted, sizes),
         }

@@ -34,3 +34,26 @@ def patient_bootstrap(metric, labels, scores, patients, rounds=1000, seed=0):
 
     low, high = np.percentile(values, [2.5, 97.5])
     return float(low), float(high)
+
+
+def paired_gap(metric, labels, first, second, patients, rounds=1000, seed=0):
+    """95% interval for first minus second on the same photos, resampling whole patients."""
+    labels = np.asarray(labels)
+    first = np.asarray(first)
+    second = np.asarray(second)
+
+    rows_by_patient = {}
+    for row, patient in enumerate(patients):
+        rows_by_patient.setdefault(patient, []).append(row)
+    groups = list(rows_by_patient.values())
+
+    rng = np.random.default_rng(seed)
+    gaps = []
+    for _ in range(rounds):
+        picks = rng.integers(0, len(groups), len(groups))
+        rows = np.concatenate([groups[pick] for pick in picks])
+        gap = metric(labels[rows], first[rows]) - metric(labels[rows], second[rows])
+        gaps.append(gap)
+
+    low, high = np.percentile(gaps, [2.5, 97.5])
+    return float(low), float(high)

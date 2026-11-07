@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 
-from retake.degrade import REASONS, degrade
+from retake.degrade import fault_versions
 from retake.metrics import macro_f1, patient_bootstrap
 from retake.quality_features import quality_features
 
@@ -20,14 +20,10 @@ COLUMNS = ["focus", "laplacian", "high_freq", "light_spread", "light_range", "gr
 def one_photo(job):
     cv2.setNumThreads(1)
     name, patient, seed = job
-    rng = np.random.default_rng(seed)
     image = cv2.imread(f"data/eyepacs/cache512/{name}.png")
 
     rows = []
-    for _ in range(VERSIONS_PER_PHOTO):
-        reason = REASONS[rng.integers(0, len(REASONS))]
-        strength = int(rng.integers(1, 4))
-        damaged = degrade(image, reason, strength, rng)
+    for damaged, reason, strength in fault_versions(image, seed, VERSIONS_PER_PHOTO):
         row = {"patient": patient, "reason": reason, "strength": strength}
         row.update(quality_features(damaged))
         rows.append(row)

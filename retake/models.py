@@ -11,6 +11,26 @@ def create_model(name, n_outputs, pretrained=True):
     return timm.create_model(name, pretrained=pretrained, num_classes=n_outputs)
 
 
+class JointModel(torch.nn.Module):
+    """One backbone, with one small output layer for each task."""
+
+    def __init__(self, name, head_sizes, pretrained=True):
+        super().__init__()
+        self.backbone = timm.create_model(name, pretrained=pretrained, num_classes=0)
+        width = self.backbone.head_hidden_size
+        heads = {}
+        for head, size in head_sizes.items():
+            heads[head] = torch.nn.Linear(width, size)
+        self.heads = torch.nn.ModuleDict(heads)
+
+    def forward(self, images):
+        shared = self.backbone(images)
+        outputs = {}
+        for head, layer in self.heads.items():
+            outputs[head] = layer(shared)
+        return outputs
+
+
 def count_params(model):
     total = 0
     for parameter in model.parameters():

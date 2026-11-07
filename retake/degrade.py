@@ -50,3 +50,15 @@ def degrade(image, reason, strength, rng):
     if reason == "low_contrast":
         return add_low_contrast(image, strength)
     raise ValueError(f"unknown reason {reason}")
+
+
+def fault_versions(image, seed, count):
+    """Fixed random faults for one photo, so every model is scored on the same damage."""
+    rng = np.random.default_rng(seed)
+    versions = []
+    for _ in range(count):
+        reason = REASONS[rng.integers(0, len(REASONS))]
+        strength = int(rng.integers(1, 4))
+        damaged = degrade(image, reason, strength, rng)
+        versions.append((damaged, reason, strength))
+    return versions

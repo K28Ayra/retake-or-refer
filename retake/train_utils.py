@@ -38,12 +38,18 @@ def augment(rgb, rng):
     return np.clip(rgb.astype(np.float32) * gain, 0, 255).astype(np.uint8)
 
 
+def worker_rng():
+    """One generator per worker that keeps moving. A persistent worker's seed never changes."""
+    return np.random.default_rng(torch.initial_seed() % (2**32))
+
+
 class PhotoDataset(Dataset):
     def __init__(self, paths, labels, size, train):
         self.paths = list(paths)
         self.labels = list(labels)
         self.size = size
         self.train = train
+        self.rng = None
 
     def __len__(self):
         return len(self.paths)
@@ -52,9 +58,9 @@ class PhotoDataset(Dataset):
         image = cv2.imread(self.paths[index])
         rgb = prepare_image(image, self.size)
         if self.train:
-            # torch gives each worker a new seed every epoch, so numbers do not repeat
-            seed = (torch.initial_seed() + index) % (2**32)
-            rgb = augment(rgb, np.random.default_rng(seed))
+            if self.rng is None:
+                self.rng = worker_rng()
+            rgb = augment(rgb, self.rng)
         return to_tensor(rgb), self.labels[index]
 
 

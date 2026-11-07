@@ -102,6 +102,7 @@ def main():
     parser.add_argument("--no-balance", action="store_true")
     parser.add_argument("--include-reject", action="store_true")
     parser.add_argument("--eyeq-only", action="store_true")
+    parser.add_argument("--tag", default="")
     args = parser.parse_args()
 
     run_name = f"{args.task}_{args.model}_{args.size}_s{args.seed}"
@@ -111,6 +112,7 @@ def main():
         run_name += "_withreject"
     if args.eyeq_only:
         run_name += "_eyeqonly"
+    run_name += args.tag
 
     out = Path("outputs/phase2") / run_name
     out.mkdir(parents=True, exist_ok=True)
