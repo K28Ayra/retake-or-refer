@@ -41,3 +41,9 @@ quality_mobilenetv3_small_100_384_s1,quality,mobilenetv3_small_100,384,1,True,Fa
 disease_mobilenetv3_small_100_384_s2_withreject,disease,mobilenetv3_small_100,384,2,True,True,15,9.2,1.52,6.1,15.1,0.9015,,,,,,0.8935,0.9015,0.9665,0.9632,0.9425
 quality_mobilenetv3_small_100_384_s2,quality,mobilenetv3_small_100,384,2,True,False,17,8.0,1.52,6.1,14.8,0.9016,0.9451,0.9016,0.9866,0.8444,0.8754,,,,,
 disease_mobilenetv3_small_100_448_s0_withreject,disease,mobilenetv3_small_100,448,0,True,True,15,11.2,1.52,6.1,16.7,0.9164,,,,,,0.9043,0.9164,0.9647,0.9644,0.9162
+quality_mobilenetv3_small_100_384_s0_augfixed,quality,mobilenetv3_small_100,384,0,True,False,16,7.9,1.52,6.1,13.8,0.9061,0.9456,0.9061,0.9756,0.8833,0.8872,,,,,
+disease_mobilenetv3_small_100_384_s0_withreject_augfixed,disease,mobilenetv3_small_100,384,0,True,True,17,9.1,1.52,6.1,14.0,0.922,,,,,,0.916,0.922,0.9695,0.9657,0.9489
+quality_mobilenetv3_small_100_384_s1_augfixed,quality,mobilenetv3_small_100,384,1,True,False,14,7.9,1.52,6.1,18.4,0.9055,0.9445,0.9055,0.9723,0.8794,0.8961,,,,,
+disease_mobilenetv3_small_100_384_s1_withreject_augfixed,disease,mobilenetv3_small_100,384,1,True,True,15,9.0,1.52,6.1,10.8,0.9134,,,,,,0.9019,0.9134,0.9718,0.9691,0.9501
+quality_mobilenetv3_small_100_384_s2_augfixed,quality,mobilenetv3_small_100,384,2,True,False,10,7.9,1.52,6.1,13.7,0.9037,0.9445,0.9037,0.9782,0.8833,0.8724,,,,,
+disease_mobilenetv3_small_100_384_s2_withreject_augfixed,disease,mobilenetv3_small_100,384,2,True,True,18,9.1,1.52,6.1,14.2,0.9154,,,,,,0.9109,0.9154,0.9662,0.9596,0.942

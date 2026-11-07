@@ -1,5 +1,7 @@
 # Single-task CNNs: the smallest model was enough
 
+Correction, added during Phase 3. Every run in this doc had a bug: each photo got at most 8 different augmented versions, not a new one each epoch. After I fixed it, the chosen models improved to macro-F1 0.905 (0.904 to 0.906) and AUROC 0.917 (0.913 to 0.922), with accuracy 0.945 and Usable recall 0.882, all three seeds. One seed now reaches the 0.92 stretch goal, and the mean doesn't. Those runs have `_augfixed` in their names in `results/phase2_runs.csv`. I didn't rerun the other backbones or sizes, so everything below is the old numbers, and the comparisons still compare like with like. More in [phase3.md](phase3.md).
+
 I'm taking MobileNetV3 small at 384 px into Phase 3. It's 6.1 MB in float32 and takes 12.9 ms on one server CPU thread, and I couldn't show that anything bigger is better. ResNet18 is seven times the size and scored about the same.
 
 I trained 42 runs with timm 1.0.26 and torch 2.4.1, plus 18 that I threw away (more on those below). Everything here is on validation. The test set hasn't been touched.

@@ -2,7 +2,7 @@
 
 Takes a colour retinal photo and tells a screening worker what to do next: refer the patient, retake the photo, or clear them. The goal is to catch a bad photo while the patient is still in the room, on a phone, with photos small enough to send over a weak network.
 
-Right now you can run the data pipeline, a classical baseline and two separate small CNNs, one for quality and one for disease. The joint model comes next, and nothing runs on a phone yet. This is a research project and not a medical device.
+Right now you can run the data pipeline, a classical baseline, and small CNNs, including one joint model that handles quality, disease and fault reason. Nothing runs on a phone yet. This is a research project and not a medical device.
 
 ## Setup
 
@@ -111,14 +111,43 @@ MobileNetV3 small at 384 px won, because nothing bigger did better. It's 6.1 MB 
 
 | Task | Classical | CNN |
 |---|---|---|
-| EyeQ quality accuracy | 0.924 | 0.943 |
-| EyeQ quality macro-F1 | 0.867 | 0.901 |
-| Usable recall | 0.735 | 0.851 |
-| Referable AUROC on EyeQ Good + Usable | 0.696 | 0.907 |
-| DeepDRiD disease AUROC | 0.81 | 0.966 |
+| EyeQ quality accuracy | 0.924 | 0.945 |
+| EyeQ quality macro-F1 | 0.867 | 0.905 |
+| Usable recall | 0.735 | 0.882 |
+| Referable AUROC on EyeQ Good + Usable | 0.696 | 0.917 |
+| DeepDRiD disease AUROC | 0.81 | 0.969 |
 
-I missed the stretch goal of 0.92 AUROC. The best run got 0.916, and going up to 448 px added 0.001.
+The stretch goal of 0.92 AUROC is missed on the mean, though one seed got 0.922. Going up to 448 px added 0.001. These numbers come from the retrain after an augmentation bug I found in Phase 3. The script `scripts/31_run_phase3.py variants` reruns them. The rest of the doc still has the pre-fix comparisons.
 
 My early stopping broke the first batch. It stopped runs while the learning rate was still high and scores were jumping around, so 18 of 30 quit too soon and the size comparison was meaningless. Small at 384 px went from 0.868 to 0.901 once every run got all 20 epochs. Putting EyeQ's Reject photos into disease training also helped, even though I'd left them out on purpose.
 
-Don't take the DeepDRiD 0.966 at face value. A model that never saw DeepDRiD still gets 0.939, because that set has far more severe disease than EyeQ (22% of photos against 2.6%) and is easier for reasons I can't fully explain. Quality scores are also flattered by picking the best epoch on validation. The rest is in [docs/phase2.md](docs/phase2.md).
+Don't take the DeepDRiD score at face value. A model that never saw DeepDRiD still got 0.939, because that set has far more severe disease than EyeQ (22% of photos against 2.6%) and is easier for reasons I can't fully explain. Quality scores are also flattered by picking the best epoch on validation. The rest is in [docs/phase2.md](docs/phase2.md).
+
+## Phase 3: joint model
+
+One MobileNetV3 small at 384 px with outputs for quality, disease, fault reason and the five DR grades.
+
+```bash
+python scripts/31_run_phase3.py variants
+python scripts/31_run_phase3.py lighter_reason
+python scripts/31_run_phase3.py more_seeds
+python scripts/32_compare_phase3.py
+```
+
+That's 20 runs and about 5.5 hours on one GPU. Results on validation, as means over three seeds:
+
+| Task | Two separate models | Joint |
+|---|---|---|
+| EyeQ quality macro-F1 | 0.905 | 0.909 |
+| Referable AUROC on EyeQ Good + Usable | 0.917 | 0.913 |
+| Size | 12.2 MB | 6.1 MB |
+| Time on one server CPU thread | 26.9 ms | 13.0 ms |
+| Fault reason macro-F1, on faults I added | none | 0.980 |
+
+So half the size and time, with no sign of a loss. The confidence intervals are too wide to rule out a small one. Blur score against DeepDRiD's Clarity rating gets a Spearman of about -0.49.
+
+Building this turned up a bug from Phase 2. With persistent data loader workers, each photo only ever saw 8 augmented versions over 20 epochs. Fixing that took AUROC from 0.907 to 0.917, so I retrained the separate models too, or the comparison would have flattered the joint one.
+
+I also dropped the DeepDRiD quality output. It scored only 0.80 AUROC, lower than the classical model, and pulled both main scores down past my margin.
+
+The 0.98 on reasons is on my own simulated damage and doesn't say much about real photos. On real EyeQ Reject photos the model names no fault about half the time, and that's the biggest open problem so far. No dataset labels why a real photo is bad, so I can't score it. More in [docs/phase3.md](docs/phase3.md).

@@ -1,0 +1,136 @@
+{
+  "seeds": {
+    "0": {
+      "macro_f1_joint_minus_single_ci": [
+        -0.009431250223593937,
+        0.022088977045915715
+      ],
+      "auroc_joint_minus_single_ci": [
+        -0.030621439768579346,
+        0.00411413864481837
+      ],
+      "reason_f1": 0.9779511858054442,
+      "reason_f1_ci": [
+        0.9733012094286975,
+        0.9823367447898893
+      ],
+      "blur_clarity_spearman": -0.5287637664369287,
+      "blur_clarity_spearman_ci": [
+        -0.6146294226904112,
+        -0.4317740778912631
+      ],
+      "reason_on_real_photos": {
+        "Good": {
+          "none": 0.996,
+          "blur": 0.0,
+          "uneven_light": 0.003,
+          "low_contrast": 0.001
+        },
+        "Usable": {
+          "none": 0.844,
+          "blur": 0.062,
+          "uneven_light": 0.066,
+          "low_contrast": 0.027
+        },
+        "Reject": {
+          "none": 0.457,
+          "blur": 0.338,
+          "uneven_light": 0.154,
+          "low_contrast": 0.05
+        }
+      },
+      "grade_kappa_eyeq_readable": 0.674552007898515,
+      "grade_kappa_deepdrid": 0.8060149727702499
+    },
+    "1": {
+      "macro_f1_joint_minus_single_ci": [
+        -0.0005035441564376519,
+        0.029263087777892095
+      ],
+      "auroc_joint_minus_single_ci": [
+        -0.01177199487327656,
+        0.01645339025766971
+      ],
+      "reason_f1": 0.9815202554374978,
+      "reason_f1_ci": [
+        0.9770840523898863,
+        0.9858551427885066
+      ],
+      "blur_clarity_spearman": -0.46979888929314934,
+      "blur_clarity_spearman_ci": [
+        -0.5602719085636355,
+        -0.3619700256856326
+      ],
+      "reason_on_real_photos": {
+        "Good": {
+          "none": 0.991,
+          "blur": 0.0,
+          "uneven_light": 0.008,
+          "low_contrast": 0.001
+        },
+        "Usable": {
+          "none": 0.852,
+          "blur": 0.066,
+          "uneven_light": 0.062,
+          "low_contrast": 0.019
+        },
+        "Reject": {
+          "none": 0.418,
+          "blur": 0.306,
+          "uneven_light": 0.237,
+          "low_contrast": 0.039
+        }
+      },
+      "grade_kappa_eyeq_readable": 0.6378101405373414,
+      "grade_kappa_deepdrid": 0.8260510643316233
+    },
+    "2": {
+      "macro_f1_joint_minus_single_ci": [
+        -0.025698868719126588,
+        0.006516460426125306
+      ],
+      "auroc_joint_minus_single_ci": [
+        -0.014834354849776786,
+        0.01649110454030199
+      ],
+      "reason_f1": 0.9804243634580894,
+      "reason_f1_ci": [
+        0.9758197900999948,
+        0.9850454683324832
+      ],
+      "blur_clarity_spearman": -0.4806003380899646,
+      "blur_clarity_spearman_ci": [
+        -0.5644062730722296,
+        -0.38855978263540414
+      ],
+      "reason_on_real_photos": {
+        "Good": {
+          "none": 0.993,
+          "blur": 0.0,
+          "uneven_light": 0.004,
+          "low_contrast": 0.003
+        },
+        "Usable": {
+          "none": 0.856,
+          "blur": 0.051,
+          "uneven_light": 0.054,
+          "low_contrast": 0.039
+        },
+        "Reject": {
+          "none": 0.525,
+          "blur": 0.264,
+          "uneven_light": 0.131,
+          "low_contrast": 0.08
+        }
+      },
+      "grade_kappa_eyeq_readable": 0.6796065845801166,
+      "grade_kappa_deepdrid": 0.803505685566535
+    }
+  },
+  "cpu_ms_one_thread": {
+    "joint": 13.0,
+    "quality": 13.5,
+    "disease": 13.4,
+    "share_of_two": 0.483
+  }
+}
