@@ -4,7 +4,7 @@ import pandas as pd
 import torch
 
 from retake.degrade import fault_versions
-from retake.joint import FaultValDataset, JointDataset, joint_loss, reason_answers
+from retake.joint import FaultValDataset, JointDataset, consistency_loss, joint_loss, reason_answers
 from retake.models import JointModel
 from retake.train_utils import PhotoDataset
 
@@ -95,3 +95,26 @@ def test_loss_counts_a_known_label():
     outputs = {"quality": torch.tensor([[0.0, 5.0, 0.0]]), "referable": torch.tensor([[1.0]])}
     targets = {"quality": torch.tensor([0]), "referable": torch.tensor([-1])}
     assert float(joint_loss(outputs, targets, {}, 1.0)) > 1.0
+
+
+def test_two_views_have_the_same_shape(tmp_path):
+    dataset = JointDataset(make_table(make_photo(tmp_path), 0), 32, compress="strong", two_views=True)
+    image, targets = dataset[0]
+    assert image.shape == targets["clean"].shape
+
+
+def test_two_views_match_when_nothing_compresses(tmp_path):
+    dataset = JointDataset(make_table(make_photo(tmp_path), 0), 32, compress=None, two_views=True)
+    image, targets = dataset[0]
+    assert torch.equal(image, targets["clean"])
+
+
+def test_consistency_is_zero_for_the_same_answers():
+    outputs = {"quality": torch.tensor([[2.0, 0.0, -1.0]]), "referable": torch.tensor([[1.0]])}
+    assert abs(float(consistency_loss(outputs, outputs))) < 1e-5
+
+
+def test_consistency_grows_when_answers_differ():
+    first = {"quality": torch.tensor([[5.0, 0.0, 0.0]]), "referable": torch.tensor([[3.0]])}
+    second = {"quality": torch.tensor([[0.0, 5.0, 0.0]]), "referable": torch.tensor([[-3.0]])}
+    assert float(consistency_loss(first, second)) > 1.0

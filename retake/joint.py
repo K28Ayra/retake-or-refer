@@ -4,6 +4,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
+from retake.compress import random_compress
 from retake.degrade import REASONS, degrade, fault_versions
 from retake.train_utils import augment, prepare_image, to_tensor, worker_rng
 
@@ -16,7 +17,9 @@ VAL_FAULT_SEED = 1000000
 class JointDataset(Dataset):
     """Rows with add_fault set get a random fault and teach only the reason head."""
 
-    def __init__(self, table, size):
+    def __init__(self, table, size, compress=None, two_views=False):
+        self.compress = compress
+        self.two_views = two_views
         self.paths = table["path"].tolist()
         self.labels = {}
         for name in LABELS:
@@ -41,12 +44,21 @@ class JointDataset(Dataset):
             image = degrade(image, FAULTS[fault], strength, self.rng)
             reason[fault] = 1
 
-        rgb = augment(prepare_image(image, self.size), self.rng)
+        # both views must get the same flips and rotation, or they could not be compared
+        view_seed = int(self.rng.integers(0, 2**31))
+
+        def view(photo):
+            return to_tensor(augment(prepare_image(photo, self.size), np.random.default_rng(view_seed)))
+
+        seen = image
+        if self.compress:
+            seen = random_compress(image, self.rng, self.compress)
 
         targets = {"reason": reason, "reason_known": self.reason_known[index]}
         for name in LABELS:
             targets[name] = self.labels[name][index]
-        return to_tensor(rgb), targets
+        targets["clean"] = view(image) if self.two_views else 0
+        return view(seen), targets
 
 
 class FaultValDataset(Dataset):
@@ -104,3 +116,12 @@ def joint_loss(outputs, targets, class_weights, reason_weight):
                     logits[known], targets[head][known], weight=class_weights.get(head)
                 )
     return total
+
+
+def consistency_loss(outputs, clean_outputs):
+    """A compressed photo should get the same answer as its clean version."""
+    disease = torch.nn.functional.mse_loss(outputs["referable"], clean_outputs["referable"])
+    clean_quality = torch.nn.functional.softmax(clean_outputs["quality"], dim=1)
+    quality = torch.nn.functional.cross_entropy(outputs["quality"], clean_quality)
+    entropy = -(clean_quality * torch.log(clean_quality + 1e-8)).sum(dim=1).mean()
+    return disease + quality - entropy

@@ -15,7 +15,14 @@ from scipy.stats import spearmanr
 from sklearn.metrics import accuracy_score, confusion_matrix, roc_auc_score
 from torch.utils.data import DataLoader
 
-from retake.joint import FAULTS, FaultValDataset, JointDataset, joint_loss, reason_answers
+from retake.joint import (
+    FAULTS,
+    FaultValDataset,
+    JointDataset,
+    consistency_loss,
+    joint_loss,
+    reason_answers,
+)
 from retake.metrics import macro_f1
 from retake.models import JointModel, count_params, float_size_mb, pick_gpu
 from retake.train_utils import PhotoDataset, class_weights
@@ -167,6 +174,11 @@ def main():
     parser.add_argument("--grade-head", action="store_true")
     parser.add_argument("--reason-weight", type=float, default=1.0)
     parser.add_argument("--fault-share", type=float, default=1.0)
+    parser.add_argument("--compress", choices=["strong", "mild", "light"])
+    parser.add_argument("--consistency", type=float, default=0.0)
+    parser.add_argument("--init", help="start from this best.pt instead of ImageNet weights")
+    parser.add_argument("--teacher", help="a frozen best.pt whose clean answers the model must match")
+    parser.add_argument("--distill", type=float, default=0.0)
     parser.add_argument("--tag", default="")
     args = parser.parse_args()
 
@@ -199,7 +211,10 @@ def main():
 
     fault_share = 0.0 if args.no_reason else args.fault_share
     table = build_train_table(eyeq_train, deepdrid_train, fault_share)
-    train_data = JointDataset(table, args.size)
+    use_consistency = args.consistency > 0
+    use_teacher = args.distill > 0
+    two_views = use_consistency or use_teacher
+    train_data = JointDataset(table, args.size, args.compress, two_views)
     train_loader = DataLoader(
         train_data,
         batch_size=args.batch,
@@ -233,7 +248,18 @@ def main():
         head_sizes["deepdrid_quality"] = 1
     if args.grade_head:
         head_sizes["grade"] = 5
-    model = JointModel(args.model, head_sizes).to(device)
+    model = JointModel(args.model, head_sizes, pretrained=args.init is None)
+    if args.init:
+        model.load_state_dict(torch.load(args.init, map_location="cpu", weights_only=True))
+    model = model.to(device)
+
+    teacher = None
+    if use_teacher:
+        teacher = JointModel(args.model, head_sizes, pretrained=False)
+        teacher.load_state_dict(torch.load(args.teacher, map_location="cpu", weights_only=True))
+        teacher = teacher.to(device).eval()
+        for parameter in teacher.parameters():
+            parameter.requires_grad = False
 
     quality_rows = table[table["quality"] >= 0]
     referable_rows = table[table["referable"] >= 0]
@@ -269,6 +295,14 @@ def main():
             with torch.amp.autocast("cuda"):
                 outputs = model(images)
                 loss = joint_loss(outputs, moved, weights, args.reason_weight)
+                if use_consistency:
+                    with torch.no_grad():
+                        clean_outputs = model(moved["clean"])
+                    loss = loss + args.consistency * consistency_loss(outputs, clean_outputs)
+                if use_teacher:
+                    with torch.no_grad():
+                        teacher_outputs = teacher(moved["clean"])
+                    loss = loss + args.distill * consistency_loss(outputs, teacher_outputs)
 
             optimiser.zero_grad()
             scaler.scale(loss).backward()
@@ -326,6 +360,10 @@ def main():
         "heads": "+".join(head_sizes),
         "reason_weight": args.reason_weight,
         "fault_share": fault_share,
+        "compress": args.compress,
+        "consistency": args.consistency,
+        "init": args.init or "",
+        "distill": args.distill,
         "best_epoch": best_epoch,
         "minutes": round((time.time() - start_time) / 60, 1),
         "params_m": round(count_params(model) / 1e6, 2),
