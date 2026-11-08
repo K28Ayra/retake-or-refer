@@ -2,7 +2,7 @@
 
 Takes a colour retinal photo and tells a screening worker what to do next: refer the patient, retake the photo, or clear them. The goal is to catch a bad photo while the patient is still in the room, on a phone, with photos small enough to send over a weak network.
 
-Right now you can run the data pipeline, a classical baseline, and small CNNs, including one joint model that handles quality, disease and fault reason, plus simple photo fixes for display. Nothing runs on a phone yet. This is a research project and not a medical device.
+Right now you can run the data pipeline, a classical baseline, and small CNNs, including one joint model that handles quality, disease and fault reason, plus simple photo fixes for display and a measured answer to how small a photo can be sent. Nothing runs on a phone yet. This is a research project and not a medical device.
 
 ## Setup
 
@@ -179,3 +179,25 @@ Routed wins on the damage I added, at 9 to 23 ms per photo, and leaves good phot
 Don't grade quality on a fixed photo. Brightening a bad one fools the grader, and macro-F1 drops from 0.909 to 0.879. Blur can't really be fixed either, since SSIM only goes from 0.869 to 0.879.
 
 Some real dark photos came out with dark blobs or false colours that a reader could mistake for disease. Any enhanced photo needs to sit beside the original. They also show a fault I never simulated, which is that some photos are simply too dark. More in [docs/phase4.md](docs/phase4.md).
+
+## Phase 5: compression
+
+How small can a photo get before the model's answers change? I sent the 1,784 validation photos through JPEG and WebP at 9 quality levels and 5 sizes, with and without a crop to the retina first, starting from the original files.
+
+```bash
+python scripts/51_sweep.py plain_s0=outputs/phase3/joint_384_s0_nodeepdridquality_grade
+python scripts/51_sweep.py --encoders jpeg444,jpeg444_retina plain_s0=outputs/phase3/joint_384_s0_nodeepdridquality_grade
+python scripts/50_train_robust.py tune_light
+python scripts/52_compression_curve.py
+python scripts/53_curve_figure.py
+```
+
+`51_sweep.py` takes any number of `name=folder` pairs and scores them in one pass, because compressing the photos is the slow part. All four default encoders take about 3 hours.
+
+Crop to the retina and save a 384 px JPEG at quality 95, keeping colour at full resolution (4:4:4). That's 40 KB against about 1 MB for the original. The threshold stays where it was set on original files, and sensitivity and specificity each move by under 1 point on the mean over three seeds. Normal JPEG halves the colour resolution, and that's where small red lesions are. Plain JPEG without the crop never gets there without losing more than 2 points of specificity. Squeeze harder and the model reads block artefacts as disease, so specificity collapses first.
+
+Training with random compression didn't beat that. From scratch it cost at least 0.013 AUROC on clean photos. Fine-tuning the finished model with a frozen copy as teacher kept clean AUROC within 0.006, but still needed bigger files than the plain model with the better encoder. So I kept the plain model.
+
+![AUROC and grade changes against file size](docs/figures/phase5_curve.png)
+
+This measures the model, not a person looking at the photo, and I picked the setting on validation. More in [docs/phase5.md](docs/phase5.md).
