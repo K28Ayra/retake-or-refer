@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retake or refer</title>
+<style>
+  :root {
+    --bg: #fcfcfb;
+    --ink: #0b0b0b;
+    --muted: #52514e;
+    --line: #e4e3df;
+    --accent: #2a78d6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a19;
+      --ink: #f0efec;
+      --muted: #c3c2b7;
+      --line: #3a3936;
+      --accent: #3987e5;
+    }
+  }
+  body {
+    margin: 0;
+    padding: 16px;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.45 system-ui, sans-serif;
+    max-width: 640px;
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  p { color: var(--muted); margin: 0 0 12px; }
+  button, label.pick {
+    display: inline-block;
+    padding: 10px 14px;
+    margin: 4px 8px 4px 0;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    cursor: pointer;
+  }
+  label.pick { background: var(--accent); color: #fff; border-color: var(--accent); }
+  input[type=file] { display: none; }
+  canvas { width: 192px; height: 192px; border: 1px solid var(--line); border-radius: 8px; margin: 8px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  td { padding: 6px 4px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td:first-child { color: var(--muted); width: 40%; }
+  #status { color: var(--muted); min-height: 1.4em; }
+</style>
+</head>
+<body>
+<h1>Retake or refer</h1>
+<p>Research prototype, not a medical device. Everything runs on this phone, and the photo isn't uploaded anywhere.</p>
+
+<label class="pick">Take or pick a photo<input id="photo" type="file" accept="image/*" capture="environment"></label>
+<button id="repeat" disabled>Time 20 runs</button>
+<div id="status">Loading the model…</div>
+
+<canvas id="seen" width="384" height="384"></canvas>
+<table id="answers"></table>
+
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.2/dist/ort.min.js"></script>
+<script src="preprocess.js"></script>
+<script>
+const QUALITY = ["good", "usable", "reject"];
+const REASONS = ["blur", "uneven light", "low contrast"];
+const status = document.getElementById("status");
+let session = null;
+let lastInput = null;
+
+// one thread, so the time is comparable with the single-thread server number
+ort.env.wasm.numThreads = 1;
+
+function softmax(values) {
+  const top = Math.max(...values);
+  const powers = values.map((value) => Math.exp(value - top));
+  const total = powers.reduce((a, b) => a + b, 0);
+  return powers.map((value) => value / total);
+}
+
+function sigmoid(value) {
+  return 1 / (1 + Math.exp(-value));
+}
+
+function percent(value) {
+  return (value * 100).toFixed(1) + "%";
+}
+
+// same rule as reason_answers in retake/joint.py
+function reasonText(logits) {
+  const values = Array.from(logits);
+  const top = Math.max(...values);
+  if (top <= 0) return "none found";
+  return REASONS[values.indexOf(top)];
+}
+
+async function loadModel() {
+  try {
+    // turns the int8 weights back into floats once, instead of on every photo
+    const options = { executionProviders: ["wasm"], extra: { session: { disable_quant_qdq: "1" } } };
+    session = await ort.InferenceSession.create("model.onnx", options);
+    status.textContent = "Ready.";
+  } catch (error) {
+    status.textContent = "Could not load model.onnx: " + error.message;
+  }
+}
+
+async function readPhoto(file) {
+  const bitmap = await createImageBitmap(file);
+  const canvas = document.createElement("canvas");
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+  const context = canvas.getContext("2d");
+  context.drawImage(bitmap, 0, 0);
+  const rgba = context.getImageData(0, 0, bitmap.width, bitmap.height).data;
+  return { pixels: rgbaToRgb(rgba, bitmap.width, bitmap.height), width: bitmap.width, height: bitmap.height };
+}
+
+function show(input) {
+  const canvas = document.getElementById("seen");
+  const context = canvas.getContext("2d");
+  const picture = context.createImageData(input.width, input.height);
+  for (let i = 0; i < input.width * input.height; i++) {
+    picture.data[i * 4] = input.pixels[i * 3];
+    picture.data[i * 4 + 1] = input.pixels[i * 3 + 1];
+    picture.data[i * 4 + 2] = input.pixels[i * 3 + 2];
+    picture.data[i * 4 + 3] = 255;
+  }
+  context.putImageData(picture, 0, 0);
+}
+
+async function runModel(input) {
+  const tensor = new ort.Tensor("uint8", input.pixels, [1, MODEL_SIDE, MODEL_SIDE, 3]);
+  return session.run({ pixels: tensor });
+}
+
+function fillTable(outputs, times) {
+  const quality = softmax(Array.from(outputs.quality.data));
+  const grade = softmax(Array.from(outputs.grade.data));
+  const best = quality.indexOf(Math.max(...quality));
+  const rows = [
+    ["Quality", QUALITY[best] + " (" + quality.map(percent).join(" / ") + ")"],
+    ["Fault", reasonText(outputs.reason.data)],
+    ["Referable DR", percent(sigmoid(outputs.referable.data[0]))],
+    ["Most likely grade", String(grade.indexOf(Math.max(...grade)))],
+    ["Reading the photo", times.read.toFixed(0) + " ms"],
+    ["Crop and resize", times.prepare.toFixed(0) + " ms"],
+    ["Model", times.model.toFixed(0) + " ms"],
+  ];
+  const table = document.getElementById("answers");
+  table.innerHTML = "";
+  for (const [name, value] of rows) {
+    const row = table.insertRow();
+    row.insertCell().textContent = name;
+    row.insertCell().textContent = value;
+  }
+}
+
+document.getElementById("photo").addEventListener("change", async (event) => {
+  const file = event.target.files[0];
+  if (!file || !session) return;
+  status.textContent = "Working…";
+
+  const start = performance.now();
+  const photo = await readPhoto(file);
+  const read = performance.now();
+  const input = modelInput(photo);
+  const prepared = performance.now();
+  const outputs = await runModel(input);
+  const done = performance.now();
+
+  lastInput = input;
+  show(input);
+  fillTable(outputs, { read: read - start, prepare: prepared - read, model: done - prepared });
+  document.getElementById("repeat").disabled = false;
+  status.textContent = photo.width + " x " + photo.height + " photo. Note the first run includes warm-up.";
+});
+
+document.getElementById("repeat").addEventListener("click", async () => {
+  if (!lastInput) return;
+  status.textContent = "Timing…";
+  const times = [];
+  for (let i = 0; i < 20; i++) {
+    const start = performance.now();
+    await runModel(lastInput);
+    times.push(performance.now() - start);
+  }
+  times.sort((a, b) => a - b);
+  status.textContent = "Model only, 20 runs: median " + times[10].toFixed(0) + " ms, slowest " +
+    times[19].toFixed(0) + " ms.";
+});
+
+loadModel();
+</script>
+</body>
+</html>
