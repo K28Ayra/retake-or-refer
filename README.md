@@ -224,3 +224,20 @@ python scripts/63_serve_phone.py outputs/phase6/s1/int8_weights.onnx
 
 Open the address it prints, then take or pick a photo. The page loads onnxruntime-web from jsDelivr, so the phone needs internet. More in [docs/phase6.md](docs/phase6.md).
 
+## Phase 7: refer, retake or clear
+
+```bash
+python scripts/70_predict_tuning.py outputs/phase6/s1/int8_weights.onnx
+python scripts/71_tune_decision.py
+```
+
+The second one takes about 15 minutes and writes the thresholds to `configs/decision.yaml`.
+
+The rule is "a bad photo can refer, but it can never clear". If the model calls a photo Reject but its disease probability is 0.48 or more, it refers now instead of asking for a retake. Usable photos get a middle band that asks for a retake, and Good ones get a single threshold. The thresholds minimise expected cost, with a miss costing 10, an unnecessary referral 1 and a retake 0.2. Those costs are my guess, not a clinician's.
+
+Tuned and scored on the same photos, it's 9.3% cheaper than the usual gate that retakes every bad photo. On patients it wasn't tuned on it's 6.4% cheaper (CI 3.5 to 9.5%), which misses my 10% target. A four-threshold version overfit, so I kept three. It refers 62% of the referable photos the usual gate would send back for a retake, and 81% of those early referrals are right. A Reject photo never clears, and a unit test checks that.
+
+The disease output needed Platt scaling, not just a temperature. Training with a weight on positives shifts every score, so 0.79 meant disease half the time. ECE went from 0.079 with a temperature to 0.005 with Platt.
+
+With these costs the rule refers about a third of people, because anything above a 6% chance of disease is worth referring when a miss costs ten times more. More in [docs/phase7.md](docs/phase7.md).
+

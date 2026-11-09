@@ -1,0 +1,5 @@
+variant,miss_cost,standard_cost,asymmetric_cost,in_sample_change,held_out_standard_cost,held_out_asymmetric_cost,held_out_change,held_out_change_ci_low,held_out_change_ci_high
+reject_only,10.0,0.4284,0.4046,-0.0555,0.4553,0.439,-0.0358,-0.068,-0.0064
+shared,10.0,0.4284,0.3884,-0.0934,0.4553,0.4262,-0.0639,-0.0947,-0.0348
+full,10.0,0.4284,0.3884,-0.0934,0.4553,0.4379,-0.0382,-0.0732,-0.003
+shared_reject_level,10.0,0.4263,0.3875,-0.091,0.4643,0.4259,-0.0827,-0.1105,-0.0578

@@ -1,0 +1,5 @@
+variant,miss_cost,standard_cost,asymmetric_cost,in_sample_change,held_out_standard_cost,held_out_asymmetric_cost,held_out_change,held_out_change_ci_low,held_out_change_ci_high
+shared,5.0,0.3303,0.2943,-0.1092,0.3571,0.3209,-0.1014,-0.142,-0.0627
+shared,10.0,0.4284,0.3884,-0.0934,0.4553,0.4262,-0.0639,-0.0947,-0.0348
+shared,20.0,0.5516,0.4987,-0.0959,0.5976,0.543,-0.0913,-0.1304,-0.0564
+shared,50.0,0.6495,0.6329,-0.0256,0.7398,0.7108,-0.0392,-0.0908,0.0142

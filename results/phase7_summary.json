@@ -1,0 +1,105 @@
+{
+ "calibration": {
+  "calibration": {
+   "quality": 1.274360416545587,
+   "referable": {
+    "scale": 0.781036466647554,
+    "shift": -1.0369742131834039
+   }
+  },
+  "referable_temperature_only": 1.033195317848255,
+  "quality_ece_before": 0.015463963325197548,
+  "referable_ece_before": 0.07616962451832912,
+  "quality_ece_after": 0.0088137135697345,
+  "referable_ece_after": 0.005202491276384847,
+  "referable_ece_temperature_only": 0.07878793082258835
+ },
+ "exeter": {
+  "specificity_at_80_sensitivity": 0.8633333333333333,
+  "sensitivity_at_95_specificity": 0.6842105263157895
+ },
+ "true_reject_share": 0.1889013452914798,
+ "chosen_variant": "shared",
+ "standard_rule": {
+  "refer": 0.0632803839064732
+ },
+ "asymmetric_thresholds": {
+  "good_refer": 0.0632803839064732,
+  "usable_refer": 0.4000305441266975,
+  "usable_clear": 0.0632803839064732,
+  "reject_refer": 0.48150873182586623
+ },
+ "standard": {
+  "refer_rate": 0.34641255605381166,
+  "retake_rate": 0.18497757847533633,
+  "clear_rate": 0.46860986547085204,
+  "sensitivity_now": 0.6955223880597015,
+  "sensitivity_after_retake": 0.9278893490661874,
+  "specificity_now": 0.5645272601794341,
+  "missed_now": 18
+ },
+ "asymmetric": {
+  "refer_rate": 0.3217488789237668,
+  "retake_rate": 0.20964125560538116,
+  "clear_rate": 0.46860986547085204,
+  "sensitivity_now": 0.7970149253731343,
+  "sensitivity_after_retake": 0.9353285926388998,
+  "specificity_now": 0.5645272601794341,
+  "missed_now": 18
+ },
+ "sick_sent_back_by_standard": 84,
+ "of_those_referred_now": 0.6190476190476191,
+ "early_referrals": 64,
+ "early_referrals_correct": 0.8125,
+ "decisions_by_true_quality": {
+  "true good": {
+   "clear": 721,
+   "refer": 461,
+   "retake": 8
+  },
+  "true usable": {
+   "clear": 105,
+   "refer": 45,
+   "retake": 107
+  },
+  "true reject": {
+   "clear": 10,
+   "refer": 68,
+   "retake": 259
+  }
+ },
+ "confidence": {
+  "refer": {
+   "photos": 574,
+   "mean_confidence": 0.4415232662456975,
+   "share_right": 0.4651567944250871,
+   "ece": 0.030145037706992846
+  },
+  "clear": {
+   "photos": 836,
+   "mean_confidence": 0.9755870829754512,
+   "share_right": 0.9784688995215312,
+   "ece": 0.002881816546079996
+  }
+ },
+ "sent_photos": {
+  "asymmetric_cost": 0.39270372548962923,
+  "standard_cost": 0.43643509684877985,
+  "same_decision_share": 0.8873318385650224,
+  "refer_rate": 0.3267937219730942,
+  "retake_rate": 0.21076233183856502,
+  "clear_rate": 0.4624439461883408,
+  "sensitivity_now": 0.8029850746268656,
+  "sensitivity_after_retake": 0.9357661952020004,
+  "specificity_now": 0.556935817805383,
+  "missed_now": 18
+ },
+ "deepdrid": {
+  "photos": 400,
+  "predicted_reject_share": 0.42,
+  "asymmetric_cost": 0.22378469569045487,
+  "standard_cost": 0.39659787274185176,
+  "sensitivity_now": 0.9388888888888889,
+  "retake_rate": 0.2425
+ }
+}
