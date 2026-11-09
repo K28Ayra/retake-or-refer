@@ -2,7 +2,7 @@
 
 Takes a colour retinal photo and tells a screening worker what to do next: refer the patient, retake the photo, or clear them. The goal is to catch a bad photo while the patient is still in the room, on a phone, with photos small enough to send over a weak network.
 
-Right now you can run the data pipeline, a classical baseline, and small CNNs, including one joint model that handles quality, disease and fault reason, plus simple photo fixes for display and a measured answer to how small a photo can be sent. Nothing runs on a phone yet. This is a research project and not a medical device.
+Right now you can run the data pipeline, a classical baseline, and small CNNs, including one joint model that handles quality, disease and fault reason, plus simple photo fixes for display and a measured answer to how small a photo can be sent. A 1.7 MB ONNX model runs in a phone browser page, though it hasn't been timed on a real phone yet. This is a research project and not a medical device.
 
 ## Setup
 
@@ -55,7 +55,7 @@ Licences: DeepDRiD is CC-BY-SA-4.0, the EyeQ code is CC BY-NC-SA 4.0, and EyePAC
 
 ## Layout
 
-`retake/` is the small package with the reusable code. `scripts/` runs in number order. `configs/default.yaml` holds settings, including the `realtime` switch: `false` reads photos from a dataset, `true` will read from a camera. Only the switch exists so far, the camera code isn't written yet.
+`retake/` is the small package with the reusable code. `scripts/` runs in number order. `phone/` is the browser page that runs the exported model. `configs/default.yaml` holds settings, including the `realtime` switch: `false` reads photos from a dataset, `true` will read from a camera. Only the switch exists so far, the camera code isn't written yet.
 
 ## Phase 0: data
 
@@ -201,3 +201,26 @@ Training with random compression didn't beat that. From scratch it cost at least
 ![AUROC and grade changes against file size](docs/figures/phase5_curve.png)
 
 This measures the model, not a person looking at the photo, and I picked the setting on validation. More in [docs/phase5.md](docs/phase5.md).
+
+## Phase 6: on the phone
+
+```bash
+python scripts/60_export.py --weights-only --tag _weights
+python scripts/61_bench.py outputs/phase6/s1/fp32.onnx outputs/phase6/s1/int8_weights.onnx
+python scripts/62_check_phone.py outputs/phase6/s1/int8_weights.onnx
+```
+
+The export makes one ONNX file per seed that takes 384 x 384 RGB bytes and does the normalising inside. Weights are int8, activations stay float, and it's 1.66 MB against 6.14. Over three seeds AUROC drops 0.003 and macro-F1 0.004. On one CPU core it takes 67 ms from a 10 MP JPEG to the answer, and only 7 ms of that is the model.
+
+Full int8 with ONNX Runtime wrecked the model (AUROC 0.909 to 0.555). Batch norm folded into the first layers leaves channels whose ranges differ by hundreds of times, so one activation scale can't cover them. Quantising the first convolution alone was enough to break it. I tried leaving parts in float, percentile ranges and float biases, and none came close. So I store only the weights as int8.
+
+The crop and resizing run in plain JavaScript in `phone/preprocess.js`. They match OpenCV pixel for pixel on 50 real photos, so the model gets the same input as in Python. Getting there meant copying two OpenCV rounding rules and its 32-bit sums.
+
+To try it on a phone on the same Wi-Fi:
+
+```bash
+python scripts/63_serve_phone.py outputs/phase6/s1/int8_weights.onnx
+```
+
+Open the address it prints, then take or pick a photo. The page loads onnxruntime-web from jsDelivr, so the phone needs internet. More in [docs/phase6.md](docs/phase6.md).
+

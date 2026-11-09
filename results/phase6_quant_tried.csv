@@ -1,0 +1,12 @@
+tried,mb,macro_f1,auroc_good_usable,deepdrid_auroc,reason_f1
+"float32, no quantisation",6.1361,0.9113,0.909,0.9633,0.978
+"full int8, min-max ranges",1.9028,0.306,0.5551,0.7523,0.2393
+only Conv and Gemm quantised,1.8872,0.2534,0.551,0.7046,0.1433
+"only Conv and Gemm, 99.999 percentile ranges",1.8872,0.5587,0.563,0.5483,0.2441
+squeeze-excite left in float,3.1868,0.2245,0.5785,0.7023,0.2611
+squeeze-excite and block 0 in float,3.1847,0.2407,0.5599,0.7161,0.2728
+"squeeze-excite, stem, blocks 0 and 1 in float",3.1958,0.2678,0.5688,0.7111,0.3068
+"full int8, 99.99 percentile ranges set by hand",1.9028,0.4526,0.5434,0.5893,0.1016
+"full int8, biases in float",1.8029,0.243,0.5681,0.6994,0.2549
+"biases in float, 99.99 percentile ranges",1.8029,0.661,0.6114,0.7421,0.2642
+"int8 weights, float activations",1.6586,0.9049,0.9012,0.9611,0.9736

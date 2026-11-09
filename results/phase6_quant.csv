@@ -1,0 +1,7 @@
+seed,version,method,ops,keep_float,float_bias,percentile,float_nodes,mb,onnx_vs_torch,macro_f1,auroc_good_usable,deepdrid_auroc,reason_f1
+0,fp32,minmax,all,,False,,0,6.13613,8e-05,0.91134,0.90901,0.96331,0.97795
+0,int8,minmax,all,,False,,0,1.65856,8e-05,0.9049,0.90124,0.96106,0.97358
+1,fp32,minmax,all,,False,,0,6.13613,0.00018,0.91717,0.9158,0.97207,0.98152
+1,int8,minmax,all,,False,,0,1.65856,0.00018,0.91102,0.9154,0.97174,0.98236
+2,fp32,minmax,all,,False,,0,6.13613,0.00011,0.89463,0.91615,0.96439,0.98152
+2,int8,minmax,all,,False,,0,1.65856,0.00011,0.89552,0.91602,0.96376,0.98014

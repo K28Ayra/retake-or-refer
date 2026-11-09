@@ -1,0 +1,3 @@
+model,mb,photos,megapixels_median,read_median_ms,read_p95_ms,prepare_median_ms,prepare_p95_ms,model_median_ms,model_p95_ms,total_median_ms,total_p95_ms,peak_memory_mb,memory_before_model_mb
+outputs/phase6/s1/fp32.onnx,6.14,500,10.08,35.12,71.86,24.91,41.03,6.99,7.2,68.06,115.67,638.02,398.77
+outputs/phase6/s1/int8_weights.onnx,1.66,500,10.08,34.16,70.46,25.33,41.49,6.91,7.14,67.28,114.59,640.84,399.4
