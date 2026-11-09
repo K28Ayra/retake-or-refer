@@ -2,7 +2,7 @@
 
 Takes a colour retinal photo and tells a screening worker what to do next: refer the patient, retake the photo, or clear them. The goal is to catch a bad photo while the patient is still in the room, on a phone, with photos small enough to send over a weak network.
 
-Right now you can run the data pipeline, a classical baseline, and small CNNs, including one joint model that handles quality, disease and fault reason, plus simple photo fixes for display and a measured answer to how small a photo can be sent. A 1.7 MB ONNX model runs in a phone browser page, though it hasn't been timed on a real phone yet. This is a research project and not a medical device.
+Right now you can run the data pipeline, a classical baseline, and small CNNs, including one joint model that handles quality, disease and fault reason, plus simple photo fixes for display and a measured answer to how small a photo can be sent. A 1.7 MB ONNX model runs in a phone browser page, though it hasn't been timed on a real phone yet, and `run.py` screens a folder of photos or a live camera. This is a research project and not a medical device.
 
 ## Setup
 
@@ -55,7 +55,7 @@ Licences: DeepDRiD is CC-BY-SA-4.0, the EyeQ code is CC BY-NC-SA 4.0, and EyePAC
 
 ## Layout
 
-`retake/` is the small package with the reusable code. `scripts/` runs in number order. `phone/` is the browser page that runs the exported model. `configs/default.yaml` holds settings, including the `realtime` switch: `false` reads photos from a dataset, `true` will read from a camera. Only the switch exists so far, the camera code isn't written yet.
+`retake/` is the small package with the reusable code. `scripts/` runs in number order. `phone/` is the browser page that runs the exported model. `configs/default.yaml` holds settings, including the `realtime` switch: `false` reads photos from a folder, `true` reads from a camera. `run.py` is the app.
 
 ## Phase 0: data
 
@@ -222,7 +222,7 @@ To try it on a phone on the same Wi-Fi:
 python scripts/63_serve_phone.py outputs/phase6/s1/int8_weights.onnx
 ```
 
-Open the address it prints, then take or pick a photo. The page loads onnxruntime-web from jsDelivr, so the phone needs internet. More in [docs/phase6.md](docs/phase6.md).
+Open the address it prints, then take or pick a photo. The page shows the decision with the same calibration and thresholds as `run.py`. It loads onnxruntime-web from jsDelivr, so the phone needs internet. If the phone can't reach the page, Windows Firewall or a Wi-Fi network that keeps devices apart is the usual cause. In Chrome on a Core i5 laptop the model took 27 to 30 ms. More in [docs/phase6.md](docs/phase6.md).
 
 ## Phase 7: refer, retake or clear
 
@@ -240,4 +240,20 @@ Tuned and scored on the same photos, it's 9.3% cheaper than the usual gate that 
 The disease output needed Platt scaling, not just a temperature. Training with a weight on positives shifts every score, so 0.79 meant disease half the time. ECE went from 0.079 with a temperature to 0.005 with Platt.
 
 With these costs the rule refers about a third of people, because anything above a 6% chance of disease is worth referring when a miss costs ten times more. More in [docs/phase7.md](docs/phase7.md).
+
+## Phase 8: the app
+
+```bash
+python run.py --input photos/ --out outputs/run
+python run.py --realtime on --source 0
+python scripts/80_check_app.py
+```
+
+The first writes `results.csv` with quality, fault, chance of referable DR, decision and confidence, plus an enhanced picture for each photo. The second opens a camera, checks every frame for retina, light and sharpness, keeps the sharpest of the last 60 frames, and runs the model when you press space. `--source` also takes a phone camera stream address or a video file. `--realtime on|off` overrides the config, and with it off the camera code is never even imported. A test checks that.
+
+The app doesn't need torch. On a laptop, `pip install -r requirements-live.txt` and the model file from Phase 6 are enough. Pass it with `--model`.
+
+On 200 photos the app made exactly the same decisions as Phase 7. I had no fundus videos, so I made 50 clips from DeepDRiD photos that drift in and out of focus. It picked a sharp frame in 46 of them, after I moved the sharpness check from 320 to 640 px wide (40 of 50 before). On one server core it checks 88 frames a second and decides in 23 ms after capture.
+
+A webcam can't image a retina, so live mode has only been tested on replayed clips, never with a real camera or on a screen. More in [docs/phase8.md](docs/phase8.md).
 

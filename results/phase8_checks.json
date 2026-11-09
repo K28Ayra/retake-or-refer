@@ -1,0 +1,15 @@
+{
+ "dataset_mode": {
+  "photos": 200,
+  "all_outputs_present": 200,
+  "same_decision_as_phase7": 200
+ },
+ "replay": {
+  "clips": 50,
+  "sharp_frame_picked": 46,
+  "exact_sharpest_picked": 9,
+  "checks_per_second_median": 88.34137494252488,
+  "decide_ms_median": 23.427599109709263,
+  "decide_ms_max": 46.03823646903038
+ }
+}

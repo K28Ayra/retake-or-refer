@@ -72,6 +72,20 @@ Speed in JavaScript was the other problem. In onnxruntime-web 1.19.2 under node 
 
 The process peaked at 641 MB, but 399 MB of that is Python, pandas and the libraries before the model loads. This is a Xeon Gold 5317 at 3 GHz, so treat it as an upper bound on how fast a phone can go, not a phone number.
 
+## In a laptop browser
+
+The phone wouldn't load the page over Wi-Fi or a hotspot, probably the laptop's firewall, so the first real run of the page was in Chrome on an HP Laptop 15 (Core i5-1135G7, 8 GB RAM). It used the same WebAssembly backend a phone would use, on one thread:
+
+| Photo, true DR grade | Quality shown | Raw referable | Grade shown | Model, 20 runs | Crop and resize | Reading |
+|---|---|---|---|---|---|---|
+| 0 | good, 97% | 7.5% | 0 | 27 ms median, 40 slowest | 105 ms | 140 ms |
+| 2 | good, 72% | 98.1% | 2 | 30 ms median, 36 slowest | 105 ms | 103 ms |
+| 4 | usable, 60% | 99.9% | 3 | 30 ms median, 33 slowest | 79 ms | 63 ms |
+
+The photos are DeepDRiD validation photos. Those screenshots also showed a gap: the page displayed the raw score and no decision. It now loads `phone/decision.json`, applies the Phase 7 calibration and rule in `phone/decide.js`, and shows the decision. A test checks that it agrees with the Python rule on 2,000 random outputs. On these three photos the decisions are clear (4.7% calibrated), refer (88.7%) and refer (98.9%).
+
+This is a laptop, not a phone, so the stretch target stays open.
+
 ## Trying it on your phone
 
 The page loads onnxruntime-web 1.19.2 from jsDelivr, and the model file sits next to the page. It isn't in the repo.
@@ -84,7 +98,7 @@ Open the printed address on a phone on the same Wi-Fi, take or pick a photo, and
 
 ## Open
 
-No real phone number yet. That's the stretch target, and it isn't done until someone runs the page on a phone.
+No real phone number yet. That's the stretch target, and it isn't done until someone runs the page on a phone. If the phone can't reach the laptop, Windows Firewall or a network that keeps devices apart is the usual reason.
 
 The model is touchy about early-layer noise. A 1-level difference on 4% of the pixels moved scores by up to 0.22, and quantising one layer wrecked it. I don't know whether that also makes it fragile to real phone camera noise, and Phase 5's compression results don't settle it.
 
