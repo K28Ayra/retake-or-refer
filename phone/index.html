@@ -64,11 +64,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.2/dist/ort.min.js"></script>
 <script src="preprocess.js"></script>
+<script src="decide.js"></script>
 <script>
-const QUALITY = ["good", "usable", "reject"];
 const REASONS = ["blur", "uneven light", "low contrast"];
 const status = document.getElementById("status");
 let session = null;
+let rule = null;
 let lastInput = null;
 
 // one thread, so the time is comparable with the single-thread server number
@@ -79,10 +80,6 @@ function softmax(values) {
   const powers = values.map((value) => Math.exp(value - top));
   const total = powers.reduce((a, b) => a + b, 0);
   return powers.map((value) => value / total);
-}
-
-function sigmoid(value) {
-  return 1 / (1 + Math.exp(-value));
 }
 
 function percent(value) {
@@ -102,6 +99,7 @@ async function loadModel() {
     // turns the int8 weights back into floats once, instead of on every photo
     const options = { executionProviders: ["wasm"], extra: { session: { disable_quant_qdq: "1" } } };
     session = await ort.InferenceSession.create("model.onnx", options);
+    rule = await (await fetch("decision.json")).json();
     status.textContent = "Ready.";
   } catch (error) {
     status.textContent = "Could not load model.onnx: " + error.message;
@@ -138,13 +136,15 @@ async function runModel(input) {
 }
 
 function fillTable(outputs, times) {
-  const quality = softmax(Array.from(outputs.quality.data));
   const grade = softmax(Array.from(outputs.grade.data));
-  const best = quality.indexOf(Math.max(...quality));
+  const answer = decide(outputs.quality.data, outputs.referable.data[0], rule);
+  let decisionText = answer.decision.toUpperCase() + ", confidence " + percent(answer.confidence);
+  if (answer.why) decisionText += " (" + answer.why + ")";
   const rows = [
-    ["Quality", QUALITY[best] + " (" + quality.map(percent).join(" / ") + ")"],
+    ["Decision", decisionText],
+    ["Quality", answer.qualityName + " (" + answer.quality.map(percent).join(" / ") + ")"],
     ["Fault", reasonText(outputs.reason.data)],
-    ["Referable DR", percent(sigmoid(outputs.referable.data[0]))],
+    ["Referable DR, calibrated", percent(answer.referable)],
     ["Most likely grade", String(grade.indexOf(Math.max(...grade)))],
     ["Reading the photo", times.read.toFixed(0) + " ms"],
     ["Crop and resize", times.prepare.toFixed(0) + " ms"],

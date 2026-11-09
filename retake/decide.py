@@ -1,6 +1,5 @@
 """Turn model scores into refer, retake or clear, with a confidence, and score that by expected cost."""
 import numpy as np
-from scipy.optimize import minimize_scalar
 
 CLEAR = 0
 REFER = 1
@@ -10,6 +9,13 @@ GOOD = 0
 USABLE = 1
 REJECT = 2
 COSTS = {"miss": 10.0, "over_refer": 1.0, "retake": 0.2}
+
+
+def reason_answers(reason_logits):
+    """0 means no fault. Otherwise the most likely fault, as an index into REASONS."""
+    best = reason_logits.argmax(axis=1)
+    top = reason_logits.max(axis=1)
+    return np.where(top > 0, best + 1, 0)
 
 
 def sigmoid(logits):
@@ -25,6 +31,8 @@ def softmax(logits):
 
 def fit_temperature(logits, labels, binary):
     """One number that divides the logits so the probabilities match how often the model is right."""
+    from scipy.optimize import minimize_scalar
+
     labels = np.asarray(labels)
 
     def loss(log_temperature):

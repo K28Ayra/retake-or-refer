@@ -1,0 +1,21 @@
+{
+ "model": "outputs/phase6/s1/int8_weights.onnx",
+ "rule": "shared",
+ "quality_temperature": 1.2744,
+ "referable_platt": {
+  "scale": 0.781,
+  "shift": -1.037
+ },
+ "costs": {
+  "miss": 10.0,
+  "over_refer": 1.0,
+  "retake": 0.2
+ },
+ "thresholds": {
+  "good_refer": 0.0633,
+  "usable_refer": 0.4,
+  "usable_clear": 0.0633,
+  "reject_refer": 0.4815
+ },
+ "standard_gate_threshold": 0.0633
+}

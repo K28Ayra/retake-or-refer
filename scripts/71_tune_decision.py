@@ -474,6 +474,9 @@ def main():
     }
     with open("configs/decision.yaml", "w") as f:
         yaml.safe_dump(config, f, sort_keys=False)
+    # the phone page reads the same numbers, and a browser can't read yaml
+    with open("phone/decision.json", "w") as f:
+        json.dump(config, f, indent=1)
     print(json.dumps(summary, indent=1, default=str))
 
 

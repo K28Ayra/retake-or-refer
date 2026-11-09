@@ -3,17 +3,10 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-from retake.images import pad_to_square
+from retake.images import prepare_image  # noqa: F401  (old import path)
 
 MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32)
 STD = np.array([0.229, 0.224, 0.225], dtype=np.float32)
-
-
-def prepare_image(image, size):
-    """BGR photo in, square network-ready array out. Used for training and for the phone."""
-    square = pad_to_square(image)
-    resized = cv2.resize(square, (size, size), interpolation=cv2.INTER_AREA)
-    return cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
 
 
 def to_tensor(rgb):

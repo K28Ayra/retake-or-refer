@@ -3,7 +3,6 @@ import cv2
 import numpy as np
 
 from retake.quality_features import fundus_mask, inner_mask
-from retake.unet import unet_fix
 
 SMALL_SIZE = 128
 MAX_GAIN = 3.0
@@ -149,6 +148,9 @@ def apply_method(name, image, reason, settings):
         changed["light_fix"] = "flat"
         return routed(image, reason, changed)
     if name == "unet":
+        # only this one needs torch, so the app can run without it
+        from retake.unet import unet_fix
+
         return unet_fix(image, settings["unet_path"])
     raise ValueError(f"unknown method {name}")
 

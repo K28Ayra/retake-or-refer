@@ -5,6 +5,7 @@ import torch
 from torch.utils.data import Dataset
 
 from retake.compress import random_compress
+from retake.decide import reason_answers  # noqa: F401  (old import path)
 from retake.degrade import REASONS, degrade, fault_versions
 from retake.train_utils import augment, prepare_image, to_tensor, worker_rng
 
@@ -82,13 +83,6 @@ class FaultValDataset(Dataset):
             reasons.append(REASONS.index(reason))
             strengths.append(strength)
         return torch.stack(images), torch.tensor(reasons), torch.tensor(strengths)
-
-
-def reason_answers(reason_logits):
-    """0 means no fault. Otherwise the most likely fault, as an index into REASONS."""
-    best = reason_logits.argmax(axis=1)
-    top = reason_logits.max(axis=1)
-    return np.where(top > 0, best + 1, 0)
 
 
 def joint_loss(outputs, targets, class_weights, reason_weight):

@@ -1,0 +1,7 @@
+# enough to run run.py on a laptop with the exported model, no torch needed
+numpy<2
+opencv-python
+onnxruntime==1.19.2
+pyyaml
+pandas
+-e .

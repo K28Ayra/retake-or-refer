@@ -2,9 +2,8 @@
 import cv2
 import numpy as np
 
-from retake.images import crop_to_retina, resize_long_side
+from retake.images import crop_to_retina, prepare_image, resize_long_side
 from retake.quality_features import fundus_mask
-from retake.train_utils import prepare_image
 
 CACHE_SIDE = 512
 TRAINING = {

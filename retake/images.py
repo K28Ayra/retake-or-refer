@@ -38,3 +38,10 @@ def pad_to_square(image):
     left = (size - width) // 2
     canvas[top : top + height, left : left + width] = image
     return canvas
+
+
+def prepare_image(image, size):
+    """BGR photo in, square network-ready array out. Used for training and for the phone."""
+    square = pad_to_square(image)
+    resized = cv2.resize(square, (size, size), interpolation=cv2.INTER_AREA)
+    return cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
