@@ -1,0 +1,19 @@
+{
+ "frozen_at": "2026-11-10T07:58:43+00:00",
+ "git_commit": "95a4abd0a2d2e82c6297d0e74afb62d3affb8d57",
+ "files": {
+  "configs/default.yaml": "59d0bdab02658857b3343459df98166ada598b7f430caf8457fabe6ba2016010",
+  "configs/decision.yaml": "7fa320dcb8b745a72d047964ddb93b2002811ac6143663f47ff6aeff75b60497",
+  "configs/systems.yaml": "d054662a62c819eb307cbd400ed2dd726b3ad9841526ddc9dedc825d2a9dd8d3",
+  "phone/decision.json": "2d23fbb5b12757f5459d34b39e457367af54c13ca4d3d7deee18db7cb7cd6d96",
+  "results/phase4_settings.json": "5fff3ea86a4ff68f65dbc7857ebedafbfed9a448bac00b87299799a211e22bc2",
+  "data/splits/eyeq_test.csv": "7cb1e3d2f1d93a56ded62edc26385959a20fb202a4d94cdf6f2371f27d13ac45",
+  "data/splits/deepdrid_test.csv": "137e204ce446feb00484089c0508346ddcc46e1fd1ab30cba6c4359899605fe6",
+  "outputs/phase6/s1/int8_weights.onnx": "953089ba8008f37dc169d3854df75009cb29acd9e9f75f57258d2fb01df7a0d1",
+  "outputs/phase9/models/noreason.onnx": "5c49fe4375d06952003210768752dabfdfbd5640383e45bb5755a7a4c01ba1ac",
+  "outputs/phase9/models/b2_quality.onnx": "fdb6c8d760322fe31c786d07cdd94e860e753e1a980c1c21067ca0c6d0b2fffd",
+  "outputs/phase9/models/b2_disease.onnx": "d1ac7f3447b5ef4ec33a4f2b711792f7da6b62f142c2e1992721c95ea4b25a7c",
+  "outputs/phase9/models/b1_classical_quality.joblib": "9747daf6d0c3a79668207de0fbec8a08725e872e0548ca79b56f23621c525728",
+  "outputs/phase9/models/b3_quality.onnx": "25daf1528a35671df22697b6f499457a9efff9d9cd0da3caaa65b1c41749063a"
+ }
+}
