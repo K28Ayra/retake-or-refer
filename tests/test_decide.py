@@ -77,3 +77,19 @@ def test_platt_removes_a_shift_that_temperature_cannot():
     assert binary_ece(apply_platt(shifted, platt), labels) < 0.02
     temperature = fit_temperature(shifted, labels, binary=True)
     assert binary_ece(1 / (1 + np.exp(-shifted / temperature)), labels) > 0.03
+
+
+def test_single_threshold_variant_uses_one_number():
+    from retake.tune import threshold_grid, tune_asymmetric
+
+    rng = np.random.default_rng(2)
+    referable = rng.random(600)
+    data = {
+        "quality_class": rng.integers(0, 3, 600),
+        "referable": referable,
+        "label": (rng.random(600) < referable).astype(int),
+        "good_photo": rng.random(600) < 0.6,
+    }
+    data["grid"] = threshold_grid(referable)
+    found = tune_asymmetric(data, {"miss": 10.0, "over_refer": 1.0, "retake": 0.2}, "single")
+    assert found["good_refer"] == found["usable_refer"] == found["usable_clear"] == found["reject_refer"]

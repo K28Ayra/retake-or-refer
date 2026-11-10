@@ -1,0 +1,5 @@
+system,format,side,file_quality,kb,sensitivity_drop,specificity_drop,grade_change,auroc_good_usable,passes
+full,jpeg444_retina,768,95,133.6273,-0.0081,-0.015,0.009,0.9226,True
+full,jpeg444_retina,768,85,64.6556,0.004,0.0025,0.0112,0.9178,True
+b2,jpeg,1024,95,105.5308,-0.0121,0.0208,0.0101,0.9196,False
+b2,jpeg,1024,85,52.4061,-0.0202,0.0542,0.0135,0.913,False

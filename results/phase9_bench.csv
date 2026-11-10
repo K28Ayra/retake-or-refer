@@ -1,0 +1,4 @@
+model,mb,photos,megapixels_median,read_median_ms,read_p95_ms,prepare_median_ms,prepare_p95_ms,model_median_ms,model_p95_ms,total_median_ms,total_p95_ms,peak_memory_mb,memory_before_model_mb
+outputs/phase6/s1/int8_weights.onnx,1.66,500,10.08,33.71,70.36,24.37,41.08,6.94,7.11,66.07,114.03,327.82,89.07
+outputs/phase9/models/b2_quality.onnx,1.65,500,10.08,34.27,71.11,25.07,41.13,6.91,7.07,67.14,114.84,327.91,89.58
+outputs/phase9/models/b2_disease.onnx,1.64,500,10.08,34.01,69.86,24.25,41.24,6.88,7.01,66.32,113.57,331.75,89.2

@@ -41,3 +41,17 @@ def test_int8_weights_are_smaller_and_close(tmp_path):
     small = run_onnx(ort.InferenceSession(str(int8_path), providers=["CPUExecutionProvider"]), [rgb])
     gap = np.abs(full["quality"] - small["quality"]).max()
     assert gap < 0.1 * np.abs(full["quality"]).max() + 0.05
+
+
+def test_single_output_model_exports_with_its_name(tmp_path):
+    import timm
+
+    from retake.export import Named
+
+    torch.manual_seed(0)
+    model = Named(timm.create_model("mobilenetv3_small_100", pretrained=False, num_classes=3), "quality").eval()
+    path = tmp_path / "quality.onnx"
+    export_onnx(model, path, 64, ["quality"])
+    session = ort.InferenceSession(str(path), providers=["CPUExecutionProvider"])
+    rgb = np.random.default_rng(0).integers(0, 256, (64, 64, 3)).astype(np.uint8)
+    assert list(run_onnx(session, [rgb])) == ["quality"]

@@ -9,12 +9,25 @@ from retake.train_utils import MEAN, STD
 OUTPUTS = ["quality", "referable", "reason", "grade"]
 
 
+class Named(torch.nn.Module):
+    """Gives a one-output Phase 2 model the same dict output as the joint model."""
+
+    def __init__(self, model, name):
+        super().__init__()
+        self.model = model
+        self.name = name
+
+    def forward(self, images):
+        return {self.name: self.model(images)}
+
+
 class PixelModel(torch.nn.Module):
     """Takes a uint8 RGB image of shape (1, size, size, 3) and returns the raw scores of each head."""
 
-    def __init__(self, model):
+    def __init__(self, model, outputs=OUTPUTS):
         super().__init__()
         self.model = model
+        self.outputs = list(outputs)
         mean = torch.tensor(MEAN, dtype=torch.float32).view(1, 3, 1, 1)
         std = torch.tensor(STD, dtype=torch.float32).view(1, 3, 1, 1)
         self.register_buffer("mean", mean)
@@ -25,20 +38,20 @@ class PixelModel(torch.nn.Module):
         image = (image - self.mean) / self.std
         outputs = self.model(image)
         answers = []
-        for name in OUTPUTS:
+        for name in self.outputs:
             answers.append(outputs[name])
         return tuple(answers)
 
 
-def export_onnx(model, path, size):
-    wrapped = PixelModel(model).eval()
+def export_onnx(model, path, size, outputs=OUTPUTS):
+    wrapped = PixelModel(model, outputs).eval()
     example = torch.zeros((1, size, size, 3), dtype=torch.uint8)
     torch.onnx.export(
         wrapped,
         example,
         path,
         input_names=["pixels"],
-        output_names=OUTPUTS,
+        output_names=list(outputs),
         opset_version=17,
         dynamic_axes={"pixels": {0: "batch"}},
     )
@@ -47,9 +60,10 @@ def export_onnx(model, path, size):
 def run_onnx(session, rgb_images):
     """rgb_images is a list of (size, size, 3) uint8 arrays. Returns one array per head."""
     batch = np.stack(rgb_images).astype(np.uint8)
-    answers = session.run(OUTPUTS, {"pixels": batch})
+    outputs = [output.name for output in session.get_outputs()]
+    answers = session.run(outputs, {"pixels": batch})
     named = {}
-    for name, value in zip(OUTPUTS, answers):
+    for name, value in zip(outputs, answers):
         named[name] = value
     return named
 

@@ -1,6 +1,7 @@
 """Time the whole phone path on one CPU core: read the original photo, crop and resize, run the model.
 
     python scripts/61_bench.py outputs/phase6/s1/fp32.onnx outputs/phase6/s1/int8_weights.onnx
+    python scripts/61_bench.py --out results/phase9_bench.csv a.onnx b.onnx
 
 Each model runs in its own process pinned to one core, so peak memory belongs to that model alone.
 """
@@ -76,15 +77,20 @@ def main():
         measure(sys.argv[2])
         return
 
+    paths = sys.argv[1:]
+    out = "results/phase6_bench.csv"
+    if paths[0] == "--out":
+        out = paths[1]
+        paths = paths[2:]
     results = []
-    for model_path in sys.argv[1:]:
+    for model_path in paths:
         command = ["taskset", "-c", CORE, sys.executable, __file__, "--one", model_path]
         env = dict(os.environ, OMP_NUM_THREADS="1")
         finished = subprocess.run(command, capture_output=True, text=True, env=env, check=True)
         summary = json.loads(finished.stdout.strip().splitlines()[-1])
         print(summary, flush=True)
         results.append(summary)
-    pd.DataFrame(results).round(2).to_csv("results/phase6_bench.csv", index=False)
+    pd.DataFrame(results).round(2).to_csv(out, index=False)
 
 
 if __name__ == "__main__":

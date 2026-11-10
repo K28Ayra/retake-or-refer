@@ -1,0 +1,92 @@
+costs:
+  miss: 10.0
+  over_refer: 1.0
+  retake: 0.2
+file_mb:
+  full: 1.658556
+  b2_quality: 1.645914
+  b2_disease: 1.643854
+  b3_quality: 11.227863
+  noreason: 1.654906
+systems:
+  full:
+    files:
+      joint: outputs/phase6/s1/int8_weights.onnx
+    quality_temperature: 1.2744
+    referable_platt:
+      scale: 0.781
+      shift: -1.037
+    rule: shared
+    thresholds:
+      good_refer: 0.06328345072699666
+      usable_refer: 0.400017285430486
+      usable_clear: 0.06328345072699666
+      reject_refer: 0.4814910798834453
+    val_cost: 0.3883562741244755
+  full_standard:
+    files:
+      joint: outputs/phase6/s1/int8_weights.onnx
+    quality_temperature: 1.2744
+    referable_platt:
+      scale: 0.781
+      shift: -1.037
+    rule: standard
+    thresholds:
+      refer: 0.06328345072699666
+    val_cost: 0.4283791133889742
+  full_single:
+    files:
+      joint: outputs/phase6/s1/int8_weights.onnx
+    quality_temperature: 1.2744
+    referable_platt:
+      scale: 0.781
+      shift: -1.037
+    rule: single
+    thresholds:
+      good_refer: 0.06328345072699666
+      usable_refer: 0.06328345072699666
+      usable_clear: 0.06328345072699666
+      reject_refer: 0.06328345072699666
+    val_cost: 0.4362994447973201
+  noreason:
+    files:
+      joint: outputs/phase9/models/noreason.onnx
+    quality_temperature: 1.4519584754541375
+    referable_platt:
+      scale: 0.6004567368379414
+      shift: -1.0537598814626108
+    rule: shared
+    thresholds:
+      good_refer: 0.09305412644450736
+      usable_refer: 0.22242886429422515
+      usable_clear: 0.09305412644450736
+      reject_refer: 0.3728137598691382
+    val_cost: 0.45050140765986096
+  b2:
+    files:
+      quality: outputs/phase9/models/b2_quality.onnx
+      disease: outputs/phase9/models/b2_disease.onnx
+    quality_temperature: 1.406803659849857
+    referable_platt:
+      scale: 0.6521373800076337
+      shift: -0.8703607039886998
+    rule: standard
+    thresholds:
+      refer: 0.09365500009772858
+    val_cost: 0.4582871528114877
+  b1:
+    files:
+      quality: outputs/phase9/models/b1_classical_quality.joblib
+      disease: outputs/phase9/models/b2_disease.onnx
+    referable_platt:
+      scale: 0.6521373800076337
+      shift: -0.8703607039886998
+    rule: standard
+    thresholds:
+      refer: 0.09365500009772858
+    val_cost: 0.4534880853196069
+  b3:
+    files:
+      quality: outputs/phase9/models/b3_quality.onnx
+    size: 320
+    rule: quality only
