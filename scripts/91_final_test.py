@@ -99,6 +99,12 @@ def uwf_set():
                      "path": f"{UWF}/Online-Challenge3-Evaluation/Images/{patient}/{image}.jpg"})
     table = pd.DataFrame(rows)
     table["referable"] = (table["DR_grade"] >= 2).astype(int)
+    # patient 121's two training photos are saved as r2.jpg and l3.jpg, without the patient number
+    for index, path in table["path"].items():
+        if not Path(path).exists():
+            folder = Path(path).parent
+            short_name = Path(path).name.split("_", 1)[1]
+            table.loc[index, "path"] = str(folder / short_name)
     missing = [path for path in table["path"] if not Path(path).exists()]
     if missing:
         sys.exit(f"{len(missing)} ultra-widefield photos not found, first {missing[0]}")

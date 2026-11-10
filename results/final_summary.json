@@ -1,0 +1,437 @@
+{
+ "eyeq": {
+  "full": {
+   "quality_accuracy": 0.8905,
+   "quality_accuracy_ci": [
+    0.8815,
+    0.9001
+   ],
+   "quality_macro_f1": 0.8759057932096201,
+   "quality_macro_f1_ci": [
+    0.8657,
+    0.887
+   ],
+   "auroc_good_usable": 0.8959827259883241,
+   "auroc_good_usable_ci": [
+    0.8795,
+    0.9112
+   ],
+   "auroc_all": 0.8847586040497101,
+   "sensitivity_now_good_usable": 0.812111801242236,
+   "sensitivity_after_retake_good_usable": 0.8919910109553981,
+   "specificity_good_usable": 0.6172454155286773,
+   "expected_cost": 0.480768377155487,
+   "refer_rate": 0.32,
+   "retake_rate": 0.26325,
+   "clear_rate": 0.41675,
+   "rejects_cleared": 0,
+   "follow_up_rates": [
+    0.11306532663316583,
+    0.3088322465915827
+   ],
+   "grade_kappa": 0.6237038051376143
+  },
+  "full_standard": {
+   "quality_accuracy": 0.8905,
+   "quality_accuracy_ci": [
+    0.8815,
+    0.9001
+   ],
+   "quality_macro_f1": 0.8759057932096201,
+   "quality_macro_f1_ci": [
+    0.8657,
+    0.887
+   ],
+   "auroc_good_usable": 0.8959827259883241,
+   "auroc_good_usable_ci": [
+    0.8795,
+    0.9112
+   ],
+   "auroc_all": 0.8847586040497101,
+   "sensitivity_now_good_usable": 0.8618012422360248,
+   "sensitivity_after_retake_good_usable": 0.8976091638315803,
+   "specificity_good_usable": 0.6172454155286773,
+   "expected_cost": 0.5441877151018878,
+   "refer_rate": 0.3805,
+   "retake_rate": 0.20275,
+   "clear_rate": 0.41675,
+   "rejects_cleared": 0,
+   "follow_up_rates": [
+    0.11306532663316583,
+    0.3088322465915827
+   ]
+  },
+  "full_single": {
+   "quality_accuracy": 0.8905,
+   "quality_accuracy_ci": [
+    0.8815,
+    0.9001
+   ],
+   "quality_macro_f1": 0.8759057932096201,
+   "quality_macro_f1_ci": [
+    0.8657,
+    0.887
+   ],
+   "auroc_good_usable": 0.8959827259883241,
+   "auroc_good_usable_ci": [
+    0.8795,
+    0.9112
+   ],
+   "auroc_all": 0.8847586040497101,
+   "sensitivity_now_good_usable": 0.9006211180124224,
+   "sensitivity_after_retake_good_usable": 0.9019983457660976,
+   "specificity_good_usable": 0.6172454155286773,
+   "expected_cost": 0.523076818145261,
+   "refer_rate": 0.53225,
+   "retake_rate": 0.051,
+   "clear_rate": 0.41675,
+   "rejects_cleared": 0,
+   "follow_up_rates": [
+    0.11306532663316583,
+    0.3088322465915827
+   ]
+  },
+  "noreason": {
+   "quality_accuracy": 0.877,
+   "quality_accuracy_ci": [
+    0.8665,
+    0.8873
+   ],
+   "quality_macro_f1": 0.8605209096156253,
+   "quality_macro_f1_ci": [
+    0.8486,
+    0.8726
+   ],
+   "auroc_good_usable": 0.896269293311652,
+   "auroc_good_usable_ci": [
+    0.8793,
+    0.9115
+   ],
+   "auroc_all": 0.8863274748074492,
+   "sensitivity_now_good_usable": 0.8400621118012422,
+   "sensitivity_after_retake_good_usable": 0.8826352258185337,
+   "specificity_good_usable": 0.667186890362856,
+   "expected_cost": 0.48397132357102646,
+   "refer_rate": 0.34975,
+   "retake_rate": 0.19075,
+   "clear_rate": 0.4595,
+   "rejects_cleared": 0,
+   "follow_up_rates": [
+    0.11557788944723618,
+    0.2999407231772377
+   ]
+  },
+  "b1": {
+   "quality_accuracy": 0.842,
+   "quality_accuracy_ci": [
+    0.8309,
+    0.8532
+   ],
+   "quality_macro_f1": 0.8136794642325551,
+   "quality_macro_f1_ci": [
+    0.8008,
+    0.8265
+   ],
+   "auroc_good_usable": 0.896855150820443,
+   "auroc_good_usable_ci": [
+    0.8798,
+    0.9112
+   ],
+   "auroc_all": 0.8914588274275523,
+   "sensitivity_now_good_usable": 0.8260869565217391,
+   "sensitivity_after_retake_good_usable": 0.8610833671462904,
+   "specificity_good_usable": 0.6980101443620756,
+   "expected_cost": 0.5400202953117692,
+   "refer_rate": 0.32025,
+   "retake_rate": 0.189,
+   "clear_rate": 0.49075,
+   "rejects_cleared": 0,
+   "follow_up_rates": [
+    0.13316582914572864,
+    0.25192649673977474
+   ]
+  },
+  "b2": {
+   "quality_accuracy": 0.885,
+   "quality_accuracy_ci": [
+    0.8748,
+    0.8944
+   ],
+   "quality_macro_f1": 0.8704515583514437,
+   "quality_macro_f1_ci": [
+    0.8589,
+    0.8807
+   ],
+   "auroc_good_usable": 0.896855150820443,
+   "auroc_good_usable_ci": [
+    0.8798,
+    0.9112
+   ],
+   "auroc_all": 0.8914588274275523,
+   "sensitivity_now_good_usable": 0.8307453416149069,
+   "sensitivity_after_retake_good_usable": 0.8603576890664503,
+   "specificity_good_usable": 0.7077643386656263,
+   "expected_cost": 0.5425242324545072,
+   "refer_rate": 0.318,
+   "retake_rate": 0.19525,
+   "clear_rate": 0.48675,
+   "rejects_cleared": 0,
+   "follow_up_rates": [
+    0.13316582914572864,
+    0.25192649673977474
+   ]
+  },
+  "b3": {
+   "quality_accuracy": 0.8805,
+   "quality_accuracy_ci": [
+    0.8708,
+    0.8902
+   ],
+   "quality_macro_f1": 0.8643125273591741,
+   "quality_macro_f1_ci": [
+    0.8532,
+    0.8753
+   ]
+  }
+ },
+ "full_vs_b2": {
+  "cost_change": -0.11383059337206414,
+  "cost_change_ci": [
+   -0.1811342993383958,
+   -0.03687903911781026
+  ],
+  "auroc_gap_full_minus_b2_ci": [
+   -0.0117,
+   0.0105
+  ]
+ },
+ "deepdrid": {
+  "full": {
+   "photos": 400,
+   "auroc": 0.9671610169491525,
+   "auroc_ci": [
+    0.9403,
+    0.9852
+   ],
+   "sensitivity_now": 0.9024390243902439,
+   "specificity": 0.4194915254237288,
+   "refer_rate": 0.475,
+   "retake_rate": 0.27,
+   "clear_rate": 0.255,
+   "predicted_reject_share": 0.4425,
+   "expected_cost": 0.34409388972127986,
+   "auroc_per_patient": 0.9711538461538461,
+   "binary_quality_accuracy": 0.6575,
+   "grade_kappa": 0.819236649947843
+  },
+  "full_standard": {
+   "photos": 400,
+   "auroc": 0.9671610169491525,
+   "auroc_ci": [
+    0.9403,
+    0.9852
+   ],
+   "sensitivity_now": 0.4451219512195122,
+   "specificity": 0.4194915254237288,
+   "refer_rate": 0.3025,
+   "retake_rate": 0.4425,
+   "clear_rate": 0.255,
+   "predicted_reject_share": 0.4425,
+   "expected_cost": 0.600958893459592,
+   "auroc_per_patient": 0.9711538461538461,
+   "binary_quality_accuracy": 0.6575
+  },
+  "full_single": {
+   "photos": 400,
+   "auroc": 0.9671610169491525,
+   "auroc_ci": [
+    0.9403,
+    0.9852
+   ],
+   "sensitivity_now": 0.9695121951219512,
+   "specificity": 0.4194915254237288,
+   "refer_rate": 0.5975,
+   "retake_rate": 0.1475,
+   "clear_rate": 0.255,
+   "predicted_reject_share": 0.4425,
+   "expected_cost": 0.35416186147095885,
+   "auroc_per_patient": 0.9711538461538461,
+   "binary_quality_accuracy": 0.6575
+  },
+  "noreason": {
+   "photos": 400,
+   "auroc": 0.9808805291442746,
+   "auroc_ci": [
+    0.963,
+    0.9926
+   ],
+   "sensitivity_now": 0.9390243902439024,
+   "specificity": 0.5296610169491526,
+   "refer_rate": 0.465,
+   "retake_rate": 0.2175,
+   "clear_rate": 0.3175,
+   "predicted_reject_share": 0.4425,
+   "expected_cost": 0.25585387071695165,
+   "auroc_per_patient": 0.9891826923076923,
+   "binary_quality_accuracy": 0.6275
+  },
+  "b1": {
+   "photos": 400,
+   "auroc": 0.9781934683753617,
+   "auroc_ci": [
+    0.9589,
+    0.9914
+   ],
+   "sensitivity_now": 0.5365853658536586,
+   "specificity": 0.4788135593220339,
+   "refer_rate": 0.305,
+   "retake_rate": 0.4025,
+   "clear_rate": 0.2925,
+   "predicted_reject_share": 0.4025,
+   "expected_cost": 0.5612521379869114,
+   "auroc_per_patient": 0.983173076923077,
+   "binary_quality_accuracy": 0.6625
+  },
+  "b2": {
+   "photos": 400,
+   "auroc": 0.9781934683753617,
+   "auroc_ci": [
+    0.9589,
+    0.9914
+   ],
+   "sensitivity_now": 0.3048780487804878,
+   "specificity": 0.4661016949152542,
+   "refer_rate": 0.1975,
+   "retake_rate": 0.525,
+   "clear_rate": 0.2775,
+   "predicted_reject_share": 0.525,
+   "expected_cost": 0.6397856427960789,
+   "auroc_per_patient": 0.983173076923077,
+   "binary_quality_accuracy": 0.635
+  }
+ },
+ "ultra_widefield": {
+  "full": {
+   "photos": 256,
+   "auroc": 0.7425575734881109,
+   "auroc_ci": [
+    0.6702,
+    0.8103
+   ],
+   "sensitivity_now": 0.6880733944954128,
+   "specificity": 0.0,
+   "refer_rate": 0.4765625,
+   "retake_rate": 0.5234375,
+   "clear_rate": 0.0,
+   "predicted_reject_share": 1.0,
+   "expected_cost": 0.5590837332595103,
+   "auroc_per_patient": 0.770263671875,
+   "grade_kappa": 0.38897966516386784
+  },
+  "full_standard": {
+   "photos": 256,
+   "auroc": 0.7425575734881109,
+   "auroc_ci": [
+    0.6702,
+    0.8103
+   ],
+   "sensitivity_now": 0.0,
+   "specificity": 0.0,
+   "refer_rate": 0.0,
+   "retake_rate": 1.0,
+   "clear_rate": 0.0,
+   "predicted_reject_share": 1.0,
+   "expected_cost": 0.8587482276527869,
+   "auroc_per_patient": 0.770263671875
+  },
+  "full_single": {
+   "photos": 256,
+   "auroc": 0.7425575734881109,
+   "auroc_ci": [
+    0.6702,
+    0.8103
+   ],
+   "sensitivity_now": 0.981651376146789,
+   "specificity": 0.0,
+   "refer_rate": 0.9609375,
+   "retake_rate": 0.0390625,
+   "clear_rate": 0.0,
+   "predicted_reject_share": 1.0,
+   "expected_cost": 0.569265486349203,
+   "auroc_per_patient": 0.770263671875
+  },
+  "noreason": {
+   "photos": 256,
+   "auroc": 0.674467952318542,
+   "auroc_ci": [
+    0.5925,
+    0.7563
+   ],
+   "sensitivity_now": 0.908256880733945,
+   "specificity": 0.0,
+   "refer_rate": 0.82421875,
+   "retake_rate": 0.17578125,
+   "clear_rate": 0.0,
+   "predicted_reject_share": 1.0,
+   "expected_cost": 0.5588113838122146,
+   "auroc_per_patient": 0.6650390625
+  },
+  "b1": {
+   "photos": 256,
+   "auroc": 0.7695812269862072,
+   "auroc_ci": [
+    0.6954,
+    0.8303
+   ],
+   "sensitivity_now": 0.25688073394495414,
+   "specificity": 0.0,
+   "refer_rate": 0.1953125,
+   "retake_rate": 0.80078125,
+   "clear_rate": 0.00390625,
+   "predicted_reject_share": 0.80078125,
+   "expected_cost": 0.8243104508166201,
+   "auroc_per_patient": 0.784912109375
+  },
+  "b2": {
+   "photos": 256,
+   "auroc": 0.7695812269862072,
+   "auroc_ci": [
+    0.6954,
+    0.8303
+   ],
+   "sensitivity_now": 0.0,
+   "specificity": 0.0,
+   "refer_rate": 0.0,
+   "retake_rate": 1.0,
+   "clear_rate": 0.0,
+   "predicted_reject_share": 1.0,
+   "expected_cost": 0.9116560499593404,
+   "auroc_per_patient": 0.784912109375
+  }
+ },
+ "enhancement": {
+  "clahe": {
+   "quality_macro_f1": 0.8100560310324879,
+   "auroc_good_usable": 0.8772310447529705
+  },
+  "routed": {
+   "quality_macro_f1": 0.8397903537194485,
+   "auroc_good_usable": 0.8999837632045133
+  }
+ },
+ "smallest_passing_file": {
+  "b2": null,
+  "full": {
+   "system": "full",
+   "format": "jpeg444_retina",
+   "side": 512,
+   "file_quality": 95,
+   "kb": 62.78923193359375,
+   "sensitivity_drop": -0.00776397515527949,
+   "specificity_drop": 0.01404603979711272,
+   "grade_change": 0.0175,
+   "auroc_good_usable": 0.8979111483776534,
+   "passes": true
+  }
+ }
+}

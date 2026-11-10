@@ -2,7 +2,7 @@
 
 Takes a colour retinal photo and tells a screening worker what to do next: refer the patient, retake the photo, or clear them. The goal is to catch a bad photo while the patient is still in the room, on a phone, with photos small enough to send over a weak network.
 
-Right now you can run the data pipeline, a classical baseline, and small CNNs, including one joint model that handles quality, disease and fault reason, plus simple photo fixes for display and a measured answer to how small a photo can be sent. A 1.7 MB ONNX model runs in a phone browser page, though it hasn't been timed on a real phone yet, and `run.py` screens a folder of photos or a live camera. This is a research project and not a medical device.
+Right now you can run the data pipeline, a classical baseline, and small CNNs, including one joint model that handles quality, disease and fault reason, plus simple photo fixes for display and a measured answer to how small a photo can be sent. A 1.7 MB ONNX model runs in a phone browser page, though it hasn't been timed on a real phone yet, and `run.py` screens a folder of photos or a live camera. The final test has been run once, and the results are in the Phase 9 section, including the targets it missed. It has never been tried on a handheld camera. This is a research project and not a medical device.
 
 ## Setup
 
@@ -257,3 +257,21 @@ On 200 photos the app made exactly the same decisions as Phase 7. I had no fundu
 
 A webcam can't image a retina, so live mode has only been tested on replayed clips, never with a real camera or on a screen. More in [docs/phase8.md](docs/phase8.md).
 
+
+## Phase 9: the test
+
+```bash
+python scripts/90_freeze.py
+python scripts/91_final_test.py --dry-run
+python scripts/91_final_test.py
+```
+
+The first records the hash of every model, config and threshold file, and won't run while the code has uncommitted changes. The second runs the whole thing on validation photos so you can check it works. The third runs once on the test sets and refuses to start if anything in the freeze has changed. It took me about 40 minutes and writes `results/final_summary.json` and `results/final_sending.csv`.
+
+You'll need the EyePACS test photos for this, which is a 53 GB download (`python scripts/00_download.py eyepacs_test`, then `python scripts/02_prepare_eyepacs.py test`, which keeps only the 4,000 EyeQ test photos and deletes the zip).
+
+On the EyeQ test photos, quality accuracy is 0.891 and referable AUROC 0.896. Compared with two separate networks and the usual gate, the system costs 11.4% less per photo (CI 3.7 to 18.1%), and the model is half the size and half the CPU time. It can send a 63 KB photo where the two networks needed the original. That saving comes from the refer-or-retake rule, though. The joint model with the usual gate costs the same as the two networks. If a miss costs 20 or 50 instead of 10, the saving grows to 18% and 25%. At a miss cost of 5 it's 4% and not clear of zero (`python scripts/92_cost_weights.py`).
+
+Two numbers missed. The AUROC gap to the two networks is 0.001, but its interval reaches 0.0117 below and the margin was 0.01. And only 81% of referable photos are referred straight away, short of 85%, because borderline photos go for a retake.
+
+On a different desk camera (DeepDRiD) the disease AUROC holds at 0.967, but 44% of photos are called Reject. On ultra-widefield photos every photo is called Reject and AUROC drops to 0.743. That's more than the 0.15 drop I'd said would mean not ready for other cameras. It hasn't been tested on a handheld camera at all. More in [docs/phase9.md](docs/phase9.md).
