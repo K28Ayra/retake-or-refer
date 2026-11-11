@@ -2,7 +2,7 @@
 
 Takes a colour retinal photo and tells a screening worker what to do next: refer the patient, retake the photo, or clear them. The goal is to catch a bad photo while the patient is still in the room, on a phone, with photos small enough to send over a weak network.
 
-Right now you can run the data pipeline, a classical baseline, and small CNNs, including one joint model that handles quality, disease and fault reason, plus simple photo fixes for display and a measured answer to how small a photo can be sent. A 1.7 MB ONNX model runs in a phone browser page, though it hasn't been timed on a real phone yet, and `run.py` screens a folder of photos or a live camera. The final test has been run once, and the results are in the Phase 9 section, including the targets it missed. It has never been tried on a handheld camera. This is a research project and not a medical device.
+Right now you can run the data pipeline, a classical baseline, and small CNNs, including one joint model that handles quality, disease and fault reason, plus simple photo fixes for display and a measured answer to how small a photo can be sent. A 1.7 MB ONNX model runs in a phone browser page, though it hasn't been timed on a real phone yet, and `run.py` screens a folder of photos or a live camera. The final test has been run once, and the results are in the Phase 9 section, including the targets it missed. The [model card](docs/model_card.md) lists the limits. It has never been tried on a handheld camera. This is a research project and not a medical device.
 
 ## Setup
 
@@ -275,3 +275,17 @@ On the EyeQ test photos, quality accuracy is 0.891 and referable AUROC 0.896. Co
 Two numbers missed. The AUROC gap to the two networks is 0.001, but its interval reaches 0.0117 below and the margin was 0.01. And only 81% of referable photos are referred straight away, short of 85%, because borderline photos go for a retake.
 
 On a different desk camera (DeepDRiD) the disease AUROC holds at 0.967, but 44% of photos are called Reject. On ultra-widefield photos every photo is called Reject and AUROC drops to 0.743. That's more than the 0.15 drop I'd said would mean not ready for other cameras. It hasn't been tested on a handheld camera at all. More in [docs/phase9.md](docs/phase9.md).
+
+## Phase 10: from a fresh clone
+
+```bash
+git clone https://github.com/K28Ayra/retake-or-refer
+cd retake-or-refer
+sh setup_tools.sh
+conda activate ./envs/retina
+pytest
+```
+
+The env took 20 minutes to build and all 85 tests passed. With the model file and the 200 Phase 8 photos, `run.py` gave exactly the same output as my working copy, every row and every enhanced picture.
+
+The model file isn't in the repo, so you build it with the Phase 3 and Phase 6 scripts. [docs/model_card.md](docs/model_card.md) says what the model is, what it was trained on, its test numbers and its limits. The short version is that it has never seen a handheld photo, rejects every ultra-widefield photo, and runs on costs a clinician should replace. More in [docs/phase10.md](docs/phase10.md).
